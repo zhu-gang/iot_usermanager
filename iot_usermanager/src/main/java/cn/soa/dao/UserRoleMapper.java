@@ -111,4 +111,7 @@ public interface UserRoleMapper {
 	  */  
 	public int deleteUserAndRoleByObjects(@Param("user") UserOrganization user, 
 			@Param("userRole") UserRole userRole);
+	public List<UserRole> queryAllroles(@Param("first")int page, @Param("last")int pageSize);
+	public int countRoles();
+
 }

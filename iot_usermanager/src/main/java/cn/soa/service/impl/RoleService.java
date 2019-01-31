@@ -46,6 +46,33 @@ public class RoleService implements RoleServiceInter{
 	public List<UserRole> getUserRoleByNum( int usernum ) {
 		List<UserRole> userRoles = userRoleMapper.findUserRoleByNum(usernum);
 		return userRoles;
+	}
+
+
+	@Override
+	public List<UserRole> queryAllroles(int page, int pageSize) {
+		return userRoleMapper.queryAllroles((page-1)*pageSize,page*pageSize);
+	}
+
+
+	@Override
+	public int countRoles() {
+		// TODO A.uto-generated method stub
+		return userRoleMapper.countRoles();
+	}
+
+
+	@Override
+	public int saveUserRole(UserRole userRole) {
+		
+		return userRoleMapper.saveUserRole(userRole);
+	}
+
+
+	@Override
+	public int modifyUserRoleById(UserRole userRole) {
+		// TODO Auto-generated method stub
+		return userRoleMapper.modifyUserRoleById(userRole);
 	}	
 	
 }

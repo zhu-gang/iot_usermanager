@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.soa.entity.UserOrganization;
 import cn.soa.entity.UserRole;
 import cn.soa.entity.headResult.ResultJson;
+import cn.soa.service.impl.RoleService;
 import cn.soa.service.inter.RoleServiceInter;
 import cn.soa.service.inter.UserServiceInter;
 import cn.soa.util.GlobalUtil;
@@ -59,25 +60,27 @@ import cn.soa.util.GlobalUtil;
 @RestController
 @RequestMapping("/role")
 public class RoleController{
+	@Autowired
+	private RoleService roleService;
 	private static Logger logger = LoggerFactory.getLogger( RoleController.class );
 	
-	@Autowired
-	private UserServiceInter userService;
-	
-	@Autowired
-	private RoleServiceInter roleService;
-	
-	 /**   
-	  * @Title: loginContr   
-	  * @Description: 登录验证       
-	  * @return: ResultJson<String>        
-	  */  
-	@GetMapping( "/{userName}/{userPassword}")
-	public ResultJson<String> loginContr(@PathVariable("userName") @NotBlank String userName,
-			@PathVariable("userPassword") @NotBlank String userPassword){
-		logger.debug("-------C----------开始登陆-----------");		
-		return null;
-	}	
-
-
+	@RequestMapping("/roles")
+	public ResultJson queryAllroles(@RequestParam("page") int page ,@RequestParam("limit") int pageSize) {
+		int count =roleService.countRoles();
+		return new ResultJson(0,""+count,roleService.queryAllroles(page,pageSize));
+	}
+	@RequestMapping("/addOrUpdateRole")
+	public ResultJson addOrUpdateRoles(UserRole userRole) {
+		Integer rid=userRole.getRolid();
+		int modifyCount=-1;
+		if(rid==null||rid.equals("")) {
+			modifyCount=roleService.saveUserRole(userRole);
+		}
+		modifyCount=roleService.modifyUserRoleById(userRole);
+		if(modifyCount>0) {
+			return new ResultJson(0,"角色操作成功");
+		}
+		return new ResultJson(1,"角色操作失败");
+		
+	}
 }

@@ -12,6 +12,8 @@ package cn.soa.service.inter;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.soa.entity.UserRole;
 
 
@@ -31,5 +33,8 @@ public interface RoleServiceInter {
 	  * @return: List<UserRole>        
 	  */  
 	List<UserRole> getUserRoleByNum(int usernum);
-	
+    List<UserRole> queryAllroles(int page, int pageSize);
+    int countRoles();
+    public int saveUserRole( UserRole userRole);
+    public int modifyUserRoleById(UserRole userRole);
 }

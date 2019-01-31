@@ -4,18 +4,28 @@
  
 <mapper namespace="cn.soa.dao.UserRoleMapper">
 	<sql id="userRoleFiled">
-		(name, state, note, remark1, remark2)
+		name, create_time,create_time,state, note, remark1 , remark2,rolid
 	</sql>
 
 
 	<!-- ===========================1、查询===============================  -->
-	
+	<!-- 分页查询角色信息 -->
+	<select id="queryAllroles" resultType="cn.soa.entity.UserRole" >
+		select <include refid="userRoleFiled"> </include> from 
+		(select ROWNUM num, role.* from  iot_user_role role order by rolid) a 
+  	   where <![CDATA[ 
+        num >#{first} and num<=#{last}
+     ]]>  
+	</select>
+	<!-- 统计数据 -->
+		<select id="countRoles" resultType="int" >
+		select count(*) from iot_user_role
+	</select>
 	<!-- 1.1、根据用户角色id查询用户角色信息 -->
 	<select id="findUserRoleById" parameterType="int" resultType="cn.soa.entity.UserRole">
 		select * from user_role
 		where rolid = { #rolid }
 	</select>
-	
 	<!-- 1.2、根据用户id查询用户角色信息 -->
 	<select id="findUserRoleByNum" parameterType="int" resultType="cn.soa.entity.UserRole">
 		select r.* 
@@ -146,6 +156,7 @@
 		delete from user_role_relation
 		where userid = #{user.userid} and rolid = #{userRole.rolid}
 	</delete>
+	
 </mapper>
  
 
