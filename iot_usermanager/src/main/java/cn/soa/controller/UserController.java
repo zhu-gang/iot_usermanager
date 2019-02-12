@@ -193,15 +193,15 @@ public class UserController {
 	@DeleteMapping("/{usernum}")
 	public ResultJson<String> deleteUserContro(@PathVariable("usernum") @NotBlank String usernum) {
 		logger.debug("-----C------- 删除用户   ---- usernum： " + usernum);
-		int i = userService.deleteUserByNumServ(usernum);
+		int i = userService.deleteUserAndInfoByNum(usernum);
 		if( i < 0 ) {
-			logger.debug("C---- 删除用户 失败返回值 ---i---" + i);
+			logger.debug("C---- 删除用户 或用户信息失败返回值 ---i---" + i);
 			return new ResultJson<String>(1, "未知错误，删除失败", i + "" );
 		}else if( i == 0) {
-			logger.debug("C---- 删除用户信息失败返回值 ---i---" + i);
-			return new ResultJson<String>(1, "删除用户信息失败 ，删除数据为0", i + "" );
+			logger.debug("C---- 删除用户或用户信息失败返回值 ---i---" + i);
+			return new ResultJson<String>(1, "删除用户或用户信息失败 ，删除数据为0", i + "" );
 		}else {
-			logger.debug("C---- 删除用户信息成功返回值 ---i---" + i);
+			logger.debug("C---- 删除用户或用户信息成功返回值 ---i---" + i);
 			return new ResultJson<String>(0, "删除用户成功", i + "" );
 		}
 	}

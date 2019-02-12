@@ -171,8 +171,6 @@ layui.config({
             ,{field:'remark1',width:100, title: '状态',templet: '#userState'}
             ,{width:300,title: '操作', align:'center'/*toolbar: '#barDemo'*/
                 ,templet: function(d){
-                	console.log( '--------d-------' );
-                	console.log( d );
                     var html='';
                     var addBtn='<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">添加</a>';
                     var delBtn='<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
@@ -325,7 +323,7 @@ function add(pObj) {
  */
 function save( rowWholeData ){
 	console.log( '----请求后端保存增加用户-----------' );
-	console.log( this );
+//	console.log( this );
 	var rowData = rowWholeData?rowWholeData:null,
 	data = {};
 	data.name = $.trim( rowData.data.name );
@@ -418,44 +416,5 @@ function test() {
     treeGrid.updateRow(tableId,o);*/
 }
 
-
-
-
-/**
- * websocket
- */
-$(function(){
-	//验证
-	if(typeof(WebSocket)=='undefined'){
-    	alert("你的浏览器不支持websocket")
-    	return ;
-    };
-    console.log(WebSocket);
-	
-	//ws连接,打开服务
-	socket = new WebSocket("ws://localhost:8001/push/pushVideoListToWeb");
-	socket.onopen = function(){
-		console.log("--------------ws服务已打开----------------");  
-		socket.send(JSON.stringify({'age':20})); 
-	}
-	
-	/*
-	 * 发送信息
-	 */
-	function sendWs(){
-		socket.onmessage = function(msg){
-    		console.log( msg.data );
- 		}
-	}
-	
-	/*
-	 * 关闭ws服务
-	 */
-	function sendWs(){
-		socket.onclose=function(){
-			console.log("--------------关闭ws服务--------------");
-  		}
-	}
-})
 
 

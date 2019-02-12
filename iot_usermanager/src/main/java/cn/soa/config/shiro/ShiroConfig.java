@@ -47,7 +47,6 @@ public class ShiroConfig {
 	        //securityManager.setCacheManager(new MemoryConstrainedCacheManager());
 	        // 自定义session管理 使用redis
 	        //securityManager.setSessionManager(sessionManager());
-	        System.out.println("----------securityManager----------" +securityManager);
 	        return securityManager;
 	    }
     

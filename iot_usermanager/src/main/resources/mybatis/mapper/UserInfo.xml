@@ -138,7 +138,7 @@
 	</update>
 	
 	<!-- 根据id删除用户 -->
-	<delete id="deleteUserInfoById" parameterType="string">
+	<delete id="deleteUserInfoByNum" parameterType="string">
 		delete from iot_user_info
 		where usernum = #{ usernum }
 	</delete>

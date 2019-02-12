@@ -149,7 +149,7 @@ function logoutSucc(){
  */
 function menoCallBack(){
 	console.log( '----------菜单栏单击事件----------');	
-	console.log( $(this) );	
+//	console.log( $(this) );	
 	//获取二级子菜单
 	var secondMeno = $(this).attr('id');
 	console.log( secondMeno );	
@@ -185,7 +185,6 @@ function navClickBack(obj){
 		.load( ipPort + url + ' .loadContent', function(returnDom){
 			$( returnDom ).find( 'script' ).appendTo( '#indexContent' );
 		});
-	console.log( a );	
 }
 
 /**
@@ -203,7 +202,7 @@ $(function(){
 //    console.log(WebSocket);
 	
 	//ws连接,打开服务
-	socket = new WebSocket("ws://"+ ipPort.substr(6) + "/push/pushVideoListToWeb");
+	socket = new WebSocket( "ws://"+ ipPort.substr(6) + "/push/pushVideoListToWeb" );
 	socket.onopen = function(){
 		console.log("--------------ws服务已打开----------------");  
 		socket.send( JSON.stringify({'test':20}) ); 
@@ -220,7 +219,7 @@ $(function(){
 				title: '消息提示',
 			  	shade: false,
 			  	anim: 2,
-			  	area: ['250px', '150px'],
+			  	area: ['400px', '250px'],
 			  	maxmin: true,
 			  	content: ipPort + '/html/userCenter/noticeMessage.html',
 			  	offset: 'rb',
@@ -228,7 +227,7 @@ $(function(){
 			  	success: function(layero){
 //			  		console.log(  $(layero[0]).children('div') );
 			  		$( $(layero[0]).children('div')[1] ).empty().css(
-			  			{"height":"200","width":"250","font-size":"24px",
+			  			{"height":"200","width":"250","font-size":"14px",
 			  			 "padding-left":"25px","padding-top":"20px"}
 			  			)
 			  			.text( msg.data );

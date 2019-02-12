@@ -19,13 +19,13 @@ $(function(){
     	type: 'time',
     	value: new Date().getHours() + ":" + new Date().getMinutes() + ":" + "59",
     	change: function(value, date, endDate){
-    		console.log(value); //得到日期生成的值，如：2017-08-18
-    		console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
-    		console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+//    		console.log(value); //得到日期生成的值，如：2017-08-18
+//    		console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+//    		console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
     		var hourNumber,minuteNumber,
     			currHour=new Date().getHours(),choosedateHour=date.hours,
     			chooseMinute=date.minutes;
-    		console.log(currHour);
+//    		console.log(currHour);
     		//跨越的小时
     		if( choosedateHour > currHour ){
     			hourNumber = (choosedateHour - currHour) * 3600;
@@ -38,6 +38,7 @@ $(function(){
     		console.log( timeNumber);
   		}
   	});
+	element.init();
 })
 
 /**

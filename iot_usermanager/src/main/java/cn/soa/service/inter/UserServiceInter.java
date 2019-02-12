@@ -100,7 +100,17 @@ public interface UserServiceInter {
 	 * @param: @return      
 	 * @return: int        
 	 */  
-	int deleteUserInfoByNumServ(String usernum);		
+	int deleteUserInfoByNumServ(String usernum);
+
+
+	/**   
+	 * @Title: deleteUserAndInfoByNum   
+	 * @Description: 根据usernum删除用户和用户信息 
+	 * @param: @param usernum
+	 * @param: @return      
+	 * @return: int        
+	 */  
+	int deleteUserAndInfoByNum(String usernum);		
 
 
 }

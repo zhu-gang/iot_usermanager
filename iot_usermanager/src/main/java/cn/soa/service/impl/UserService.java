@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import cn.soa.dao.UserInfoMapper;
 import cn.soa.dao.UserMapper;
@@ -180,22 +181,33 @@ public class UserService implements UserServiceInter{
 	 * @return: int        
 	 */  
 	@Transactional
+	@Override
 	public int deleteUserAndInfoByNum( String usernum ) {
 		/*
 		 * 删除用户
 		 */
 		int i = deleteUserByNumServ(usernum);
+		if( i < 0 ) {
+			return -1;
+		}else if( i == 0 ){
+			return 0;
+		}else {
+			
+		}
+		
 		/*
 		 * 删除用户信息
 		 */
 		int j = deleteUserInfoByNumServ(usernum);
 		
-		if( i < 0 || j < 0 ) {
+		if( j < 0 ) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return -1;
-		}else if( i == 0 || j == 0 ) {
+		}else if( j == 0 ){
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return 0;
 		}else {
-			return i;
+			return j;
 		}
 	}
 	

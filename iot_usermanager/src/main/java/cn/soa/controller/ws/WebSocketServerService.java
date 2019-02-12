@@ -53,16 +53,18 @@ public class WebSocketServerService {
 	    this.session = session;
 	    webSocketSet.add(this);     //加入set中
 	    addOnlineCount();           //在线数加1
+	    logger.debug("-----------ws服务端通知连接成功-------");
 	    logger.info("-----------有新连接加入！当前在线人数为--------" + getOnlineCount());
-		try {
-			 sendMessage("服务端通知连接成功");
+		try {		
+//			 sendMessage("服务端通知连接成功");
 			 /*
 			  * 临时通知发送新用户
 			  */
-			 //获取信息和检查(过期就不发并删除)
-			 ArrayList<HashMap<String,Object>> tempNoticeList = SpringUtil.getBean( 
+			//获取信息和检查(过期就不发并删除)
+			@SuppressWarnings("unchecked")
+			ArrayList<HashMap<String,Object>> tempNoticeList = SpringUtil.getBean( 
 						"tempNoticeList", new ArrayList<HashMap<String,Object>>().getClass());
-			 logger.info(tempNoticeList + "");
+			 logger.info( tempNoticeList + "" );
 			 ArrayList<Integer> removeList = new ArrayList<Integer>();
 			 for( int i = 0; i < tempNoticeList.size(); i++ ) {	
 				HashMap<String,Object> m = tempNoticeList.get(i);
@@ -101,17 +103,16 @@ public class WebSocketServerService {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		System.out.println("来自客户端的消息:" + message);
+		logger.debug("---- 来自客户端的消息: ----" + message );
 		String s=session.getProtocolVersion();
-		System.out.println("s:" + s);
 		//群发消息
-        for (WebSocketServerService item : webSocketSet) {
-            try {
-                item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        for (WebSocketServerService item : webSocketSet) {
+//            try {
+//                item.sendMessage(message);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 	 
 	/**
@@ -121,7 +122,7 @@ public class WebSocketServerService {
 	 */
 	@OnError
 	public void onError(Session session, Throwable error) {
-    System.out.println("发生错误");
+		logger.debug("-------------ws发生错误-------------------");
         error.printStackTrace();
     }	 
 	 
@@ -129,12 +130,15 @@ public class WebSocketServerService {
         this.session.getBasicRemote().sendText(message);
     }
  
- 
-    /**
-     * 群发自定义消息
-     **/
+
+    /**   
+     * @Title: sendInfo   
+     * @Description: 群发自定义消息  
+     * @param: @param message      
+     * @return: void        
+     */  
     public static void sendInfo(String message) {
-    	logger.info( "------------群发自定义消息-----------message:" + message );
+    	logger.debug( "------------群发自定义消息-----------message:" + message );
         for (WebSocketServerService item : webSocketSet) {
             try {
                 item.sendMessage(message);
