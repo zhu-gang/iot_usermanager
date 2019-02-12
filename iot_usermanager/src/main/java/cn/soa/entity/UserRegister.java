@@ -44,21 +44,23 @@ public class UserRegister implements Serializable{
 	 */  
 	private static final long serialVersionUID = 1L;
 	
-	private Integer regid;
+	private String regid;
 	
 	@NotNull(message="用户标识不能为空")
-	private Integer num;
+	private String num;
 	
 	@NotBlank(message="用户名不能为空")
 	private String name;	
 	
 	private Date create_time;	
 	private Integer state;	
+	
+	@NotBlank(message="用户备注不能为空")
 	private String note;
 	private Integer remark1;
 	private String remark2;
 	
-	public UserRegister( Integer num, String name, Integer state, String note) {
+	public UserRegister( String num, String name, Integer state, String note) {
 		this.num = num;
 		this.name = name;
 		this.state = state;

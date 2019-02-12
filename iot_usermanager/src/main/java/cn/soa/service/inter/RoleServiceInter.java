@@ -26,13 +26,14 @@ import cn.soa.entity.UserRole;
 
 public interface RoleServiceInter {
 
-	
+
 	 /**   
 	  * @Title: getUserRoleByUserid   
 	  * @Description: 根据用户id查询用户具有的角色                 
 	  * @return: List<UserRole>        
 	  */  
-	List<UserRole> getUserRoleByNum(int usernum);
+	List<UserRole> getUserRoleByNum(String usernum);
+	
     List<UserRole> queryAllroles(int page, int pageSize);
     int countRoles();
     public int saveUserRole( UserRole userRole);

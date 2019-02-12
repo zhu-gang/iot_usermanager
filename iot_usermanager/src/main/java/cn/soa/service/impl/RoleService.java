@@ -43,10 +43,10 @@ public class RoleService implements RoleServiceInter{
 	  * @return: UserRole        
 	  */  
 	@Override
-	public List<UserRole> getUserRoleByNum( int usernum ) {
+	public List<UserRole> getUserRoleByNum( String usernum ) {
 		List<UserRole> userRoles = userRoleMapper.findUserRoleByNum(usernum);
 		return userRoles;
-	}
+	}	
 
 
 	@Override

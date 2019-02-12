@@ -24,6 +24,7 @@ import cn.soa.entity.UserOrganization;
 import cn.soa.entity.UserRole;
 import cn.soa.service.inter.RoleServiceInter;
 import cn.soa.service.inter.UserServiceInter;
+import cn.soa.util.GlobalUtil;
 
 import java.util.*;
 
@@ -52,29 +53,35 @@ public class MyShiroRealm extends AuthorizingRealm {
         /*
          * 获取请求的用户名和密码
          */
-        int userId = Integer.parseInt(token.getUsername());
-        String password = String.valueOf(token.getPassword());
+        String userId = token.getUsername();
+        String password = new String( token.getPassword() );
         
         /*
          *  从数据库获取对应用户名密码的用户
          */
         UserOrganization user = userService.getUserOrganByUsernum(userId);
-		UserInfo userInfo = userService.getUserInfoByNum(user.getUsernum());
+//		UserInfo userInfo = userService.getUserInfoByNum(user.getUsernum());
 		logger.info("---------------- Shiro 凭证认证--------user-" + user);
-		logger.info("---------------- Shiro 凭证认证--------userInfo-" + userInfo);
+//		logger.info("---------------- Shiro 凭证认证--------userInfo-" + userInfo);
 		
         /*
          * 用户名比对
          */
         if ( user != null ) {
-        	if ( userInfo == null ) {
-                 throw new RuntimeException("登录失败，用户信息不存在");        
-        	}
+//        	if ( userInfo == null ) {
+//                 throw new RuntimeException("登录失败，用户信息不存在");        
+//        	}
             // 用户为禁用状态
-            if (userInfo.getState() != 0) {
+            if (user.getState() != 0) {
                 throw new DisabledAccountException();        
             }
             logger.info("---------------- Shiro 凭证认证成功 ----------------------");
+            
+            /*
+             * 设置cookie
+             */
+			GlobalUtil.addCookie( "name", user.getName() );
+			
             SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
             		user, //用户
             		user.getUser_password(), //密码

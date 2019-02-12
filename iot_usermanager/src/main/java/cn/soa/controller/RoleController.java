@@ -71,7 +71,7 @@ public class RoleController{
 	}
 	@RequestMapping("/addOrUpdateRole")
 	public ResultJson addOrUpdateRoles(UserRole userRole) {
-		Integer rid=userRole.getRolid();
+		String rid=userRole.getRolid();
 		int modifyCount=-1;
 		if(rid==null||rid.equals("")) {
 			modifyCount=roleService.saveUserRole(userRole);

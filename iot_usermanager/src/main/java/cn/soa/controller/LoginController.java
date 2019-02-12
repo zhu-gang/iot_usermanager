@@ -11,6 +11,7 @@
         
 package cn.soa.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -60,7 +61,7 @@ import cn.soa.util.GlobalUtil;
 @RequestMapping("/user")
 public class LoginController{
 	private static Logger logger = LoggerFactory.getLogger( LoginController.class );
-	
+
 	@Autowired
 	private UserServiceInter userService;
 	
@@ -85,21 +86,25 @@ public class LoginController{
 			/*
 			 * 设置cookie
 			 */
-			//设置用户
-			GlobalUtil.addCookie( "name", userName );
+			//设置用户			
+			GlobalUtil.addCookie( "num", userName );
 			//设置角色
-			List<UserRole> userRoles = roleService.getUserRoleByNum(Integer.parseInt(userName.trim()));
+			List<UserRole> userRoles = new ArrayList<UserRole>();
+			userRoles = roleService.getUserRoleByNum(userName.trim());
 			String roles = "";
-			for( UserRole u : userRoles) {
-				if( roles.isEmpty() ) {
-					roles = u.getName();
+			logger.debug("-------userRoles:-----------" + userRoles );
+			if( userRoles != null && userRoles.get(0) != null ) {
+				for( UserRole u : userRoles) {
+					if( roles != null && roles.isEmpty() ) {
+						roles = u.getName();
+					}
+					roles = roles + "," + u.getName();
 				}
-				roles = roles + "," + u.getName();
-			}
-			GlobalUtil.addCookie( "role", roles );
+				GlobalUtil.addCookie( "role", roles );
+			}		
 			
 			//设置组织			
-			UserOrganization user = userService.getUserOrganByUsernum(Integer.parseInt(userName.trim()));
+			UserOrganization user = userService.getUserOrganByUsernum( userName.trim() );
 			if( user != null ) {
 				GlobalUtil.addCookie( "organ", user.getParent_id() );
 			}
@@ -112,13 +117,14 @@ public class LoginController{
 		} catch (UnknownAccountException e) {
 			resultJson = new ResultJson<String>(0, "该用户不存在", null);
 		} catch (AuthenticationException e) {
-			resultJson = new ResultJson<String>(0, "登录认证失败，错误信息" + e.getLocalizedMessage(), null);
+			resultJson = new ResultJson<String>(0, "登录认证失败，错误信息", null);
 		} catch (Exception e) {
 			e.printStackTrace();
-			resultJson = new ResultJson<String>(0, "未知错误：" + e.getMessage(), null );
+			resultJson = new ResultJson<String>(0, "登录失败，未知错误" , null );
 		}
 		return resultJson;
-	}	
+	}
+	
 	
 	@PostMapping("/logout")
 	public ResultJson<String> logoutContr( HttpSession session ){

@@ -29,11 +29,11 @@ import cn.soa.entity.UserOrganization;
 @Mapper
 public interface UserMapper {
 	
-	 /** 
+	/** 
 	 * @Title: findUserById 
 	 * @Description: 根据用户id查询用户信息
 	 */
-	public UserOrganization findUserById(@Param("userId") int userId);
+	public UserOrganization findUserById(@Param("userId") String userId);
 	
 	
 	 /**   
@@ -41,7 +41,7 @@ public interface UserMapper {
 	  * @Description: 根据用户唯一标识查询用户信息      
 	  * @return: UserOrganization        
 	  */  
-	public UserOrganization findUserByUsernum(@Param("userNum") int userNum);
+	public UserOrganization findUserByUsernum(@Param("userNum") String userNum);
 	
 	
 	 /**   
@@ -57,7 +57,7 @@ public interface UserMapper {
 	  * @Description: 查询所有用户信息和对应的状态       
 	  * @return: List<UserOrganization>        
 	  */  
-	public List<UserOrganization> findUsersAndState();
+//	public List<UserOrganization> findUsersAndState();
 		
 	
 	 /** 
@@ -101,7 +101,7 @@ public interface UserMapper {
 	  * @Description: 根据usernum删除用户       
 	  * @return: int        
 	  */  
-	public int deleteUserByUsernum(@Param("usernum") int usernum);
+	public int deleteUserByUsernum(@Param("usernum") String usernum);
 	
 	
 }

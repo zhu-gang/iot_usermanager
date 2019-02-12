@@ -42,7 +42,7 @@ public interface UserRoleMapper {
 	  * @Description: 根据用户id查询用户具有的角色    
 	  * @return: UserRole        
 	  */  
-	public List<UserRole> findUserRoleByNum(@Param("usernum") int usernum);
+	public List<UserRole> findUserRoleByNum(@Param("usernum") String usernum);
 	
 	
 	 /**   
@@ -111,6 +111,8 @@ public interface UserRoleMapper {
 	  */  
 	public int deleteUserAndRoleByObjects(@Param("user") UserOrganization user, 
 			@Param("userRole") UserRole userRole);
+	
+	
 	public List<UserRole> queryAllroles(@Param("first")int page, @Param("last")int pageSize);
 	public int countRoles();
 

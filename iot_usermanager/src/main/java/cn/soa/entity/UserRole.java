@@ -32,7 +32,7 @@ import lombok.experimental.Accessors;
 @Accessors( chain=true )
 public class UserRole implements Serializable {
 	
-	private Integer rolid;
+	private String rolid;
 	private String name;
 	private Integer state;
 	private Date create_time;
