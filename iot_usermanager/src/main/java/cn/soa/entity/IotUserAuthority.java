@@ -1,63 +1,75 @@
 package cn.soa.entity;
 
 public class IotUserAuthority {
-    private String autid;
 
-    private String resourceid;
+	private String autid;
 
-    private Short type;
+	private String resourceid;
 
-    private String name;
+	private Short type;
 
-    private String note;
+	private String name;
 
-    private Integer remark1;
+	private String note;
 
-    public String getAutid() {
-        return autid;
-    }
+	private Integer remark1;
 
-    public void setAutid(String autid) {
-        this.autid = autid == null ? null : autid.trim();
-    }
+	public String getAutid() {
+		return autid;
+	}
 
-    public String getResourceid() {
-        return resourceid;
-    }
+	public void setAutid(String autid) {
+		this.autid = autid == null ? null : autid.trim();
+	}
 
-    public void setResourceid(String resourceid) {
-        this.resourceid = resourceid == null ? null : resourceid.trim();
-    }
+	public String getResourceid() {
+		return resourceid;
+	}
 
-    public Short getType() {
-        return type;
-    }
+	public void setResourceid(String resourceid) {
+		this.resourceid = resourceid == null ? null : resourceid.trim();
+	}
 
-    public void setType(Short type) {
-        this.type = type;
-    }
+	public Short getType() {
+		return type;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setType(Short type) {
+		this.type = type;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getNote() {
-        return note;
-    }
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
 
-    public void setNote(String note) {
-        this.note = note == null ? null : note.trim();
-    }
+	public String getNote() {
+		return note;
+	}
 
-    public Integer getRemark1() {
-        return remark1;
-    }
+	public void setNote(String note) {
+		this.note = note == null ? null : note.trim();
+	}
 
-    public void setRemark1(Integer remark1) {
-        this.remark1 = remark1;
-    }
+	public Integer getRemark1() {
+		return remark1;
+	}
+
+	public void setRemark1(Integer remark1) {
+		this.remark1 = remark1;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "IotUserAuthority [autid=" + autid + ", resourceid=" + resourceid + ", type=" + type + ", name=" + name
+				+ ", note=" + note + ", remark1=" + remark1 + "]";
+	}
 }

@@ -4,11 +4,11 @@
 	<resultMap id="BaseResultMap"
 		type="cn.soa.entity.RoleAuthority">
 		<id column="AUTID" jdbcType="VARCHAR" property="autid" />
-		<result column="" jdbcType="VARCHAR" property="type" />
+		<result column="TYPE" jdbcType="VARCHAR" property="type" />
 		<result column="NAME" jdbcType="VARCHAR" property="name" />
 		<result column="NOTE" jdbcType="VARCHAR" property="note" />
 		<result column="RESOURCE_NAME" jdbcType="VARCHAR"
-			property="resouceName" />
+			property="resourceName" />
 		<result column="URL" jdbcType="VARCHAR" property="url" />
 		<result column="DESCRIBE" jdbcType="VARCHAR"
 			property="describe" />

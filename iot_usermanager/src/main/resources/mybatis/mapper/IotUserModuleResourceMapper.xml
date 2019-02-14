@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.soa.dao.IotUserModuleResourceMapper">
   <resultMap id="BaseResultMap" type="cn.soa.entity.IotUserModuleResource">
-    <id column="MODID" jdbcType="VARCHAR" property="modid" />
+    <id column="modId" jdbcType="VARCHAR" property="modId" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="URL" jdbcType="VARCHAR" property="url" />
     <result column="DESCRIBE" jdbcType="VARCHAR" property="describe" />
@@ -10,33 +10,47 @@
     <result column="LAST_MODIFY_TIME" jdbcType="TIMESTAMP" property="lastModifyTime" />
     <result column="REMARK1" jdbcType="VARCHAR" property="remark1" />
     <result column="PARENT_ID" jdbcType="VARCHAR" property="parentId" />
+    <result column="IS_PARENT" jdbcType="VARCHAR" property="isParent" />
   </resultMap>
   <sql id="Base_Column_List">
-    MODID, NAME, URL, DESCRIBE, CREATE_TIME, LAST_MODIFY_TIME, REMARK1, PARENT_ID
+    modId, NAME, URL, DESCRIBE, CREATE_TIME, LAST_MODIFY_TIME, REMARK1, PARENT_ID,IS_PARENT
   </sql>
+  
+  <!-- 查询所有权限资源（—模块、菜单等）信息 -->
+  <select id="findAllResourceInfo" resultMap="BaseResultMap">
+  		select 
+  			<include refid="Base_Column_List"></include>
+  		from IOT_USER_MODULE_RESOURCE
+  </select>
+  
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from IOT_USER_MODULE_RESOURCE
-    where MODID = #{modid,jdbcType=VARCHAR}
+    where modId = #{modId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from IOT_USER_MODULE_RESOURCE
-    where MODID = #{modid,jdbcType=VARCHAR}
+    where modId = #{modId,jdbcType=VARCHAR}
+  </delete>
+   <delete id="deleteByParentId" parameterType="java.lang.String">
+    delete from IOT_USER_MODULE_RESOURCE
+    where PARENT_ID = #{parentId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="cn.soa.entity.IotUserModuleResource">
-    insert into IOT_USER_MODULE_RESOURCE (MODID, NAME, URL, 
+    insert into IOT_USER_MODULE_RESOURCE (modId, NAME, URL, 
       DESCRIBE, CREATE_TIME, LAST_MODIFY_TIME, 
       REMARK1, PARENT_ID)
-    values (#{modid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+    values (#{modId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
       #{describe,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{lastModifyTime,jdbcType=TIMESTAMP}, 
       #{remark1,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.soa.entity.IotUserModuleResource">
     insert into IOT_USER_MODULE_RESOURCE
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="modid != null">
-        MODID,
+      <if test="modId != null">
+        modId,
       </if>
       <if test="name != null">
         NAME,
@@ -59,10 +73,13 @@
       <if test="parentId != null">
         PARENT_ID,
       </if>
+      <if test="isParent != null">
+        IS_PARENT,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="modid != null">
-        #{modid,jdbcType=VARCHAR},
+      <if test="modId != null">
+        #{modId,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -84,6 +101,9 @@
       </if>
       <if test="parentId != null">
         #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="isParent != null">
+        #{isParent,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -112,7 +132,7 @@
         PARENT_ID = #{parentId,jdbcType=VARCHAR},
       </if>
     </set>
-    where MODID = #{modid,jdbcType=VARCHAR}
+    where modId = #{modId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.soa.entity.IotUserModuleResource">
     update IOT_USER_MODULE_RESOURCE
@@ -123,6 +143,16 @@
       LAST_MODIFY_TIME = #{lastModifyTime,jdbcType=TIMESTAMP},
       REMARK1 = #{remark1,jdbcType=VARCHAR},
       PARENT_ID = #{parentId,jdbcType=VARCHAR}
-    where MODID = #{modid,jdbcType=VARCHAR}
+    where modId = #{modId,jdbcType=VARCHAR}
   </update>
+  
+  <select id="findParentResource" resultType="Map">
+  	SELECT 
+  		modId,NAME
+  	FROM 
+  		IOT_USER_MODULE_RESOURCE
+  	WHERE 
+  		IS_PARENT = '0'
+  </select>
+  
 </mapper>

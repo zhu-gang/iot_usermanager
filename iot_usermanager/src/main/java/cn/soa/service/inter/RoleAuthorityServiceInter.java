@@ -41,6 +41,6 @@ public interface RoleAuthorityServiceInter {
 	 * @param authorityInfo
 	 * @return 影响数据条数
 	 */
-	int deleteAuthorityInfo(List<IotUserAuthority> authorityInfo);
+	int deleteAuthorityInfo(List<String> ids);
 
 }

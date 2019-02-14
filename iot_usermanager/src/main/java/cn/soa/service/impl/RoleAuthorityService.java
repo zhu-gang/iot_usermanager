@@ -22,39 +22,51 @@ import cn.soa.service.inter.RoleAuthorityServiceInter;
 
 @Service
 public class RoleAuthorityService implements RoleAuthorityServiceInter {
-	
-	
+
 	@Autowired
 	private IotUserAuthorityMapper authorityMapper;
-	
-	
+
 	@Autowired
 	private RoleAuthorityMapper roleAuthorityMapper;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see cn.soa.service.inter.RoleAuthorityServiceInter#getAuthorityInfo()
 	 */
 	@Override
 	public List<RoleAuthority> getAuthorityInfo() {
-		
+
 		List<RoleAuthority> authorityInfo = roleAuthorityMapper.findRoleAuthority();
-		
+
 		System.out.println(authorityInfo);
-		
+
 		return authorityInfo;
 	}
 
-	/* (non-Javadoc)
-	 * @see cn.soa.service.inter.RoleAuthorityServiceInter#addAuthorityInfo(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * cn.soa.service.inter.RoleAuthorityServiceInter#addAuthorityInfo(java.util.
+	 * List)
 	 */
 	@Override
 	public int addAuthorityInfo(List<IotUserAuthority> authorityInfo) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int num = 0;
+		for (IotUserAuthority authority : authorityInfo) {
+			num += authorityMapper.insertSelective(authority);
+		}
+		return num;
 	}
 
-	/* (non-Javadoc)
-	 * @see cn.soa.service.inter.RoleAuthorityServiceInter#updateAuthorityInfo(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * cn.soa.service.inter.RoleAuthorityServiceInter#updateAuthorityInfo(java.util.
+	 * List)
 	 */
 	@Override
 	public int updateAuthorityInfo(List<IotUserAuthority> authorityInfo) {
@@ -62,13 +74,22 @@ public class RoleAuthorityService implements RoleAuthorityServiceInter {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see cn.soa.service.inter.RoleAuthorityServiceInter#deleteAuthorityInfo(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * cn.soa.service.inter.RoleAuthorityServiceInter#deleteAuthorityInfo(java.util.
+	 * List)
 	 */
 	@Override
-	public int deleteAuthorityInfo(List<IotUserAuthority> authorityInfo) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteAuthorityInfo(List<String> ids) {
+
+		int result = 0;
+		for (String autid : ids) {
+			result += authorityMapper.deleteByPrimaryKey(autid);
+		}
+
+		return result;
 	}
 
 }

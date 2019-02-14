@@ -29,7 +29,7 @@ public class RoleAuthority {
 	
 	private String note;//权限备注
 	
-	private String resouceName;//资源名称
+	private String resourceName;//资源名称
 	
 	private String url;//资源url
 	
