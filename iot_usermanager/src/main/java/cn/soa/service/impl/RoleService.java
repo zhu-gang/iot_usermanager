@@ -11,7 +11,10 @@
         
 package cn.soa.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.soa.dao.UserRoleMapper;
+import cn.soa.entity.UserOrganization;
 import cn.soa.entity.UserRole;
 import cn.soa.service.inter.RoleServiceInter;
 
@@ -43,14 +47,18 @@ public class RoleService implements RoleServiceInter{
 	  * @return: UserRole        
 	  */  
 	@Override
-	public List<UserRole> getUserRoleByNum( int usernum ) {
+	public List<UserRole> getUserRoleByNum( String usernum ) {
 		List<UserRole> userRoles = userRoleMapper.findUserRoleByNum(usernum);
 		return userRoles;
-	}
+	}	
 
 
 	@Override
-	public List<UserRole> queryAllroles(int page, int pageSize) {
+	public List<UserRole> queryAllroles(Integer page, Integer pageSize) {
+		if(page==null || pageSize==null) {
+			page=0;
+			pageSize=0;
+		}
 		return userRoleMapper.queryAllroles((page-1)*pageSize,page*pageSize);
 	}
 
@@ -73,6 +81,43 @@ public class RoleService implements RoleServiceInter{
 	public int modifyUserRoleById(UserRole userRole) {
 		// TODO Auto-generated method stub
 		return userRoleMapper.modifyUserRoleById(userRole);
-	}	
+	}
+
+
+	@Override
+	public int deleteRolesInIds(String[] ids) {
+		// TODO Auto-generated method stub
+		return userRoleMapper.deleteRolesInIds(ids);
+	}
+
+
+	@Override
+	public List<Map<String ,Object>> queryUsersByRold(String ROLID) {
+		List<UserOrganization> orgs=userRoleMapper.queryAllorgnInfo();
+		List<UserOrganization> orgsByid=userRoleMapper.queryUsersByRold(ROLID);
+		List<Map<String ,Object>> lists=new ArrayList<Map<String ,Object>>();
+		for( UserOrganization org:orgs) {
+			Map<String,Object> map=new HashMap<>();
+			map.put("name",org.getName());
+			map.put("orgid",org.getOrgid());
+			map.put("is_parent",org.getIs_parent());
+			map.put("usernum",org.getUsernum());
+			map.put("parent_id",org.getParent_id());
+			if(org.getUsernum().equals(0)) {
+				map.put("open", true);
+			}
+			for(int i=0;i<orgsByid.size();i++) {
+				if(org.getName().equals(orgsByid.get(i).getName())) {
+					map.put("checked", true);
+				};	
+				break;
+			}
+			lists.add(map);
+		}
+
+		return lists;
+	}
+
+
 	
 }

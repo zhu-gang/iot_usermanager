@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -37,8 +38,8 @@ import lombok.experimental.Accessors;
 @Validated
 public class UserInfo implements Serializable{
 	
-	@NotBlank(message="用户信息id不能为空")
-	private Integer userid;	
+	@NotNull(message="用户信息id不能为空")
+	private String usernum;	
 	
 	private String nname;
 	
@@ -48,12 +49,10 @@ public class UserInfo implements Serializable{
 	
 	private String address;
 	
-	private Integer telephone;
+	private String telephone;
 	private String email;
 	private Date create_time;
 	private Date last_modify_time;
-	
-	private Integer state;
 	private String note;
 	private Integer remark1;
 	private String remark2;

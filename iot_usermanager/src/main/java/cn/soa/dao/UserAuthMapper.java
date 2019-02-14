@@ -29,7 +29,6 @@ import cn.soa.entity.UserAuthority;
 @Mapper
 public interface UserAuthMapper {
 	
-	
 	 /**   
 	  * @Title: findUserAuths   
 	  * @Description: 查询所有的权限信息    

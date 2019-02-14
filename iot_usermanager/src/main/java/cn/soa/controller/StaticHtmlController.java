@@ -29,11 +29,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/static")
 public class StaticHtmlController {
 	private static Logger logger = LoggerFactory.getLogger( StaticHtmlController.class );
-	
+
 	@RequiresAuthentication
 	@RequestMapping("/index")
-	public String helloHtml( HashMap<String, Object> map ) {
+	public String indexHtml( HashMap<String, Object> map ) {
 		 map.put( "hello", "欢迎进入HTML页面" );
-		 return "/index";
+		 return "index.html";
+	}
+	
+	@RequiresAuthentication
+	@RequestMapping("/userManager")
+	public String userManagerHtml( HashMap<String, Object> map ) {
+		 map.put( "hello", "欢迎进入用户管理页面" );
+		 return "userManager.html";
 	}
 }

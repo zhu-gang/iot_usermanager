@@ -4,7 +4,7 @@
  */
 var element = layui.element,
 	layer = layui.layer,
-	logoutUrl = ipPort + "/user/logout",
+	logoutUrl = ipPort + "/user/logout",	
 	username;
 //菜单配置
 var menoSon = {
@@ -29,8 +29,8 @@ var navMenoSon = {
 var menoArr = [
 	{
 		"id" : "1", 
-		"first" : "控制台", 
-		"second" : "控制台1,控制台2,控制台3",
+		"first" : "首页", 
+		"second" : "快捷导航1,快捷导航2,快捷导航3",
 		"url":""		 
 	},
 	{
@@ -43,7 +43,7 @@ var menoArr = [
 		"id" : "3", 
 		"first" : "用户模块", 
 		"second" : "用户管理,角色管理,权限管理,系统通知",
-		"url":"/static/userManager,/static/roleManager,/static/authManager,/static/systemNotice"		 
+		"url":"/html/userCenter/userManager.html,/html/userCenter/roleManager.html,/html/userCenter/authManager.html,/html/userCenter/notice.html"		 
 	},
 	{
 		"id" : "4", 
@@ -58,45 +58,31 @@ var menoArr = [
  * @type 
  */
 $(function(){	
-	//初始化加载一级菜单
+	/*
+	 * 初始化加载一级菜单
+	 */
 	$.grep( menoArr, function( item, index ){
 		$('#firstMeno').append(
 			'<li class="layui-nav-item" id=' + item.id + '>' +
-				'<a href="">' +
-				  + $.trim(item.first) + 
+				'<a href="javaScript:;">' +
+					$.trim(item.first) + 
 				 '</a>'+
 			'</li>'		
 		);
 	})	
+	element.init(); 
 	
-	//初始化加载二级菜单
+	/*
+	 * 初始化加载二级菜单
+	 */
 	
+	/*
+	 * 加载用户名
+	 */
 	//获取usernum
 	username = getCookie1("name");
-	//console.log( 'username:' + username );
-	
-	//ws验证
-	if(typeof(WebSocket)=='undefined'){
-    	layer.msg( "你的浏览器不支持消息推送" );
-    	return;
-    };
-    console.log( '-------------WebSocket------------' );
-    console.log(WebSocket);
-	
-	//ws连接,打开服务
-	socket = new WebSocket("ws://localhost:8001/push/pushVideoListToWeb");
-	socket.onopen = function(){
-		console.log("--------------ws服务已打开----------------");  
-		socket.send( JSON.stringify({'test':20}) ); 
-	}
-	
-	socket.onmessage = function(msg){
-		console.log( msg.data );
-	}
-	
-	socket.onclose=function(){
-		console.log("--------------关闭ws服务--------------");
-	}
+	username = username.substr( 1, username.length-2);
+	$('#userName').find('img').after(username);
 })
 
 /**
@@ -107,17 +93,22 @@ $(function(){
 	//退出事件绑定
 	$('#logout').on('click', logoutCallBack );
 	
+	//基本资料单击事件
+	$('#userInfo').on( 'click', userInfoCE);
+	
 	//菜单栏单击事件
 	$('.layui-nav-item').on('click', menoCallBack );
 })
 
 /**
- * 页面初始化
+ * 基本资料单击事件函数
  * @type 
  */
-$(function(){
+function userInfoCE(){
+	console.log( '----------基本资料单击事件函数----------');
 	
-})
+	//打开页面
+}
 
 /**
  * 退出事件绑定回调函数
@@ -153,39 +144,106 @@ function logoutSucc(){
 }
 
 /**
- * 菜单单击事件回调函数
+ * 菜单栏单击事件
  * @type 
  */
-function menoCallBack( obj ){
-	console.log( '----------退出请求成功回调函数----------');	
+function menoCallBack(){
+	console.log( '----------菜单栏单击事件----------');	
+//	console.log( $(this) );	
 	//获取二级子菜单
-	var secondMeno = $(obj).attr('id');
-	console.log( 'secondMeno' );	
+	var secondMeno = $(this).attr('id');
+	console.log( secondMeno );	
 	$secondMeno = $('#secondMeno');
 	$secondMeno.empty();
 	$.grep( menoArr, function( item, index ){
 		if( $.trim(item.id) == $.trim(secondMeno) ){
-			var secondMenoArr = menoArr.second.split(',');
-			var secondMenoUrl = menoArr.url.split(',');
-			$secondMeno.map( secondMenoArr, function( item, index ){
+			var secondMenoArr = item.second.split(',');
+			var secondMenoUrl = item.url.split(',');
+			$.map( secondMenoArr, function( item1, index ){
 				$secondMeno.append(
 					'<li class="layui-nav-item layui-nav-itemed" '+ 
-							' url=' + secondMenoUrl[index] + ' onclick="navClickBack(obj);">' + 
+							' url=' + secondMenoUrl[index] + ' onclick="navClickBack(this);">' + 
 				     	'<a class="" href="javascript:;">' + secondMenoArr[index] + '</a>' +
 			        '</li>');
 			})	
 		}
 	})	
+	element.init(); 
+	return false;
 }
 
 /**
  * 侧边菜单单击事件函数
  * @type 
  */
-function navClickBack( obj ){
+function navClickBack(obj){
 	console.log( '----------侧边导航栏单击事件函数---------');	
-	console.log( obj );	
-	var url = $(obj).atrr('url');
-	//请求
-	ajax();
+	var url = $(obj).attr('url');
+	//http://localhost:8001/html/userCenter/userManager.html
+	//动态加载页面
+	var a = $( '#indexContent' )
+		.load( ipPort + url + ' .loadContent', function(returnDom){
+			$( returnDom ).find( 'script' ).appendTo( '#indexContent' );
+		});
 }
+
+/**
+ * ws加载
+ */
+$(function(){
+	/*
+	 * ws验证
+	 */
+	if(typeof(WebSocket)=='undefined'){
+    	layer.msg( "你的浏览器不支持消息推送" );
+    	return;
+    };
+//    console.log( '-------------WebSocket------------' );
+//    console.log(WebSocket);
+	
+	//ws连接,打开服务
+	socket = new WebSocket( "ws://"+ ipPort.substr(6) + "/push/pushVideoListToWeb" );
+	socket.onopen = function(){
+		console.log("--------------ws服务已打开----------------");  
+		socket.send( JSON.stringify({'test':20}) ); 
+	}
+	
+	socket.onmessage = function( msg ){
+		console.log("--------------ws接受到消息----------------");		
+		wsMessage = msg.data;
+		
+		//通知
+		if(  msg.data ){
+			layer.open({
+				type: 2,
+				title: '消息提示',
+			  	shade: false,
+			  	anim: 2,
+			  	area: ['400px', '250px'],
+			  	maxmin: true,
+			  	content: ipPort + '/html/userCenter/noticeMessage.html',
+			  	offset: 'rb',
+			  	zIndex: layer.zIndex, //重点1
+			  	success: function(layero){
+//			  		console.log(  $(layero[0]).children('div') );
+			  		$( $(layero[0]).children('div')[1] ).empty().css(
+			  			{"height":"200","width":"250","font-size":"14px",
+			  			 "padding-left":"25px","padding-top":"20px"}
+			  			)
+			  			.text( msg.data );
+//			  		console.log( wsMessage );
+//			  		$(layero[0]).children('div').text();
+//			  		$( $(layero[0]).children('div')[1] ).find('iframe').text('33333333');
+//			  		var sonDom = $( $(layero[0]).children('div')[1] ).find('iframe').contents()[0];
+//			  		console.log( $( $(layero[0]).children('div')[1] ).find('iframe').contents()[0] );
+//			  		var $div = $( sonDom ).find( '#nmessage' ) ;
+			    	layer.setTop(layero); //重点2
+			  	}
+			});    
+		}		
+	}
+	
+	socket.onclose=function(){
+		console.log("--------------关闭ws服务--------------");
+	}	
+})

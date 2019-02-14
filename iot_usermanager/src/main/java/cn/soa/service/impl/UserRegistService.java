@@ -33,9 +33,27 @@ import cn.soa.service.inter.UserRegistServiceInter;
 public class UserRegistService implements UserRegistServiceInter{
 	private static Logger logger = LoggerFactory.getLogger( UserRegistService.class );
 	
+	
 	@Autowired
 	private UserRegistMapper userRegistMapper;
 
+	
+	
+	 /**   
+	  * @Title: findRegistersServ   
+	  * @Description:  查询所有注册用户      
+	  * @return: List<UserRegister>        
+	  */ 
+	@Override
+	public List<UserRegister> findRegistersServ(){
+		try {
+			List<UserRegister> registers = userRegistMapper.findRegisters();
+			return registers;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}				
+	}
 	
 	 /**   
 	  * @Title: saveUserRegistServ   
@@ -65,7 +83,7 @@ public class UserRegistService implements UserRegistServiceInter{
 	  * @return: UserRegister        
 	  */  
 	@Override
-	public UserRegister findRegisterByNumServ( int i) {
+	public UserRegister findRegisterByNumServ( String i) {
 		try {
 			UserRegister register = userRegistMapper.findRegisterByNum(i);
 			if(register != null ) {
@@ -76,5 +94,22 @@ public class UserRegistService implements UserRegistServiceInter{
 			return null;
 		}
 		return null;
+	}
+	
+	
+	 /**   
+	  * @Title: modifyRegStateServ   
+	  * @Description:  根据num修改注册用户编号      
+	  * @return: int        
+	  */  
+	@Override
+	public int modifyRegStateServ( String num ) {
+		try {
+			int i = userRegistMapper.modifyRegisteState(num);
+			return i;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 }

@@ -29,20 +29,35 @@ import cn.soa.entity.UserRegister;
 @Mapper
 public interface UserRegistMapper {
 	
+	/**   
+	  * @Title: findRegisters   
+	  * @Description:  查询所有注册用户      
+	  * @return: List<UserRegister>        
+	  */  
+	List<UserRegister> findRegisters();
+	
 	
 	 /**   
 	  * @Title: findRegisterByNum   
 	  * @Description: 根据注册usernum查询注册用户       
 	  * @return: UserRegister        
 	  */  
-	UserRegister findRegisterByNum(int usernum);
+	UserRegister findRegisterByNum(String usernum);
 	
 	
 	 /**   
 	  * @Title: saveUserRegis   
-	  * @Description:        保存用户注册信息
+	  * @Description: 保存用户注册信息
 	  * @return: UserRegister        
 	  */  
 	int saveUserRegis( UserRegister userRegist ); 
+	
+	
+	 /**   
+	  * @Title: modifyRegisteState   
+	  * @Description:  根据num修改注册用户编号      
+	  * @return: int        
+	  */  
+	int modifyRegisteState( String num );
 	
 }

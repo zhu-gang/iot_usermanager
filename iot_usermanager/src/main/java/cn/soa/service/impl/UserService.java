@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import cn.soa.dao.UserInfoMapper;
 import cn.soa.dao.UserMapper;
@@ -36,7 +38,7 @@ import cn.soa.dao.UserRoleMapper;
 @Service
 public class UserService implements UserServiceInter{
 	private static Logger logger = LoggerFactory.getLogger( UserService.class );
-	
+
 	@Autowired
 	private UserMapper userMapper;
 	
@@ -53,8 +55,8 @@ public class UserService implements UserServiceInter{
 	  * @return: UserOrganization        
 	  */ 
 	@Override
-	public UserOrganization getUserOrganById( int userId ) {
-		UserOrganization user = userMapper.findUserById(userId);
+	public UserOrganization getUserOrganById( String userid ) {
+		UserOrganization user = userMapper.findUserById(userid);
 		return user;
 	}
 	
@@ -66,7 +68,7 @@ public class UserService implements UserServiceInter{
 	  * @return:         
 	  */  
 	@Override
-	public UserOrganization getUserOrganByUsernum( int usernum ) {
+	public UserOrganization getUserOrganByUsernum( String usernum ) {
 		UserOrganization user = userMapper.findUserByUsernum(usernum);
 		return user;
 	}
@@ -79,7 +81,7 @@ public class UserService implements UserServiceInter{
 	  * @return: UserInfo        
 	  */  
 	@Override
-	public UserInfo getUserInfoByUserId( int userid ) {
+	public UserInfo getUserInfoByUserId( String userid ) {
 		UserInfo userInfo = userInfoMapper.findUserInfoById(userid);
 		return userInfo;
 	}
@@ -91,7 +93,7 @@ public class UserService implements UserServiceInter{
 	  * @return: UserInfo        
 	  */  
 	@Override
-	public UserInfo getUserInfoByNum( int usernum ) {
+	public UserInfo getUserInfoByNum( String usernum ) {
 		UserInfo userInfo = userInfoMapper.findUserInfoByUsernum(usernum);
 		return userInfo;
 	}
@@ -105,18 +107,18 @@ public class UserService implements UserServiceInter{
 	  * @return: int  返回新增用户主键      
 	  */  
 	@Override
-	public int saveUserServ(UserOrganization user) {
+	public String saveUserServ(UserOrganization user) {
 		try {
 			int i = userMapper.saveUserBackId(user);
 			//检查插入条数
 			if( i < 0 ) {
-				return -1;
+				return "-1";
 			}else if(i == 0){
-				return 0;
+				return "0";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return -1;
+			return "-1";
 		}
 		
 		logger.debug("---S----新增用户---" + user);
@@ -126,7 +128,7 @@ public class UserService implements UserServiceInter{
 			UserOrganization newUser = userMapper.findUserByUsernum(user.getUsernum());
 			//结果判定
 			if( newUser.getOrgid() == null || newUser.getOrgid().toString().isEmpty() ) {
-				return 0;
+				return "0";
 			}else {
 				return newUser.getOrgid();
 			}
@@ -142,7 +144,7 @@ public class UserService implements UserServiceInter{
 	  */
 	@Override
 	public int saveUserInfoServ( UserInfo userInfo ) {
-		logger.debug("---S----新增用户------");
+		logger.debug("---S----新增用户信息------");
 		int i ;
 		try {
 			i = userInfoMapper.saveUserInfo(userInfo);
@@ -164,7 +166,7 @@ public class UserService implements UserServiceInter{
 		logger.debug("---S----查询所有 用户------");
 		List<UserOrganization> userAll = null;
 		try {
-			userAll = userMapper.findUsersAndState();
+			userAll = userMapper.findUserAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -172,7 +174,42 @@ public class UserService implements UserServiceInter{
 		return userAll;
 	}
 	
-	
+	/**   
+	 * @Title: deleteUserAndInfoByNum   
+	 * @Description: 根据usernum删除用户和用户信息
+	 * @param: @return      
+	 * @return: int        
+	 */  
+	@Transactional
+	@Override
+	public int deleteUserAndInfoByNum( String usernum ) {
+		/*
+		 * 删除用户
+		 */
+		int i = deleteUserByNumServ(usernum);
+		if( i < 0 ) {
+			return -1;
+		}else if( i == 0 ){
+			return 0;
+		}else {
+			
+		}
+		
+		/*
+		 * 删除用户信息
+		 */
+		int j = deleteUserInfoByNumServ(usernum);
+		
+		if( j < 0 ) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return -1;
+		}else if( j == 0 ){
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return 0;
+		}else {
+			return j;
+		}
+	}
 	
 	 /**   
 	  * @Title: deleteUserByNumServ   
@@ -180,7 +217,7 @@ public class UserService implements UserServiceInter{
 	  * @return: int        
 	  */  
 	@Override
-	public int deleteUserByNumServ(int usernum) {
+	public int deleteUserByNumServ( String usernum) {
 		logger.debug("---S------根据usernum删除用户 ------");
 		int i ;
 		try {
@@ -191,5 +228,24 @@ public class UserService implements UserServiceInter{
 		}
 		return i;
 	}
-	
+
+	/**   
+	 * @Title: deleteUserInfoByNumServ   
+	 * @Description: 根据num删除用户信息 
+	 * @param: @param usernum
+	 * @param: @return      
+	 * @return: int        
+	 */  
+	@Override
+	public int deleteUserInfoByNumServ( String usernum) {
+		logger.debug("---S------根据num删除用户信息 ------");
+		int i ;
+		try {
+			i = userInfoMapper.deleteUserInfoByNum(usernum);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return i;
+	}
 }

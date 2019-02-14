@@ -1,0 +1,15 @@
+.layui-logo{
+	font-size: 14px
+}
+
+.layui-layout-admin .layui-side{
+	width: 10%
+}
+
+.layui-body{
+	left: 10%
+}
+
+#userManager {
+	width: 99%
+}

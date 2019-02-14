@@ -25,13 +25,12 @@ import cn.soa.entity.UserOrganization;
  	 */
 
 public interface UserServiceInter {
-	
 	/**   
 	  * @Title: getUserOrganById   
 	  * @Description: 根据用户id查询用户信息       
 	  * @return: UserOrganization        
 	  */
-	public UserOrganization getUserOrganById( int userId );
+	public UserOrganization getUserOrganById( String userid );
 
 	
 	 /**   
@@ -39,7 +38,7 @@ public interface UserServiceInter {
 	  * @Description: 根据用户唯一标示userid查询用户信息        
 	  * @return: UserInfo        
 	  */  
-	public UserInfo getUserInfoByUserId(int userid);
+	public UserInfo getUserInfoByUserId( String userid);
 
 	
 	 /**   
@@ -47,7 +46,7 @@ public interface UserServiceInter {
 	  * @Description:  根据用户唯一标示usernum查询用户信息         
 	  * @return: UserInfo        
 	  */  
-	UserInfo getUserInfoByNum(int usernum);
+	UserInfo getUserInfoByNum( String usernum);
 	
 	
 	 /**   
@@ -55,16 +54,16 @@ public interface UserServiceInter {
 	  * @Description:   根据用户唯一标示num查询用户          
 	  * @return: UserOrganization        
 	  */  
-	UserOrganization getUserOrganByUsernum(int usernum);
+	UserOrganization getUserOrganByUsernum( String usernum);
 
 
 	
 	 /**   
 	  * @Title: saveUserServ   
 	  * @Description:  新增用户      
-	  * @return: int        
+	  * @return: String        
 	  */  
-	int saveUserServ(UserOrganization user);
+	String saveUserServ(UserOrganization user);
 
 
 	
@@ -91,11 +90,27 @@ public interface UserServiceInter {
 	  * @Description: 根据usernum删除用户            
 	  * @return: int        
 	  */  
-	int deleteUserByNumServ(int usernum);
+	int deleteUserByNumServ(String usernum);
 
 
-	
-	
+	/**   
+	 * @Title: deleteUserInfoByNumServ   
+	 * @Description: 根据num删除用户信息  
+	 * @param: @param usernum
+	 * @param: @return      
+	 * @return: int        
+	 */  
+	int deleteUserInfoByNumServ(String usernum);
+
+
+	/**   
+	 * @Title: deleteUserAndInfoByNum   
+	 * @Description: 根据usernum删除用户和用户信息 
+	 * @param: @param usernum
+	 * @param: @return      
+	 * @return: int        
+	 */  
+	int deleteUserAndInfoByNum(String usernum);		
 
 
 }

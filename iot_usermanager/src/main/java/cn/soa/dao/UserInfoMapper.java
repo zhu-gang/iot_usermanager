@@ -30,40 +30,40 @@ import cn.soa.entity.UserInfo;
 public interface UserInfoMapper {
 	
 	 /** 
-	 * @Title: findUserById 
-	 * @Description: 根据用户id查询用户信息
-	 */
-	public UserInfo findUserInfoById(@Param("userId") int userId);
-	
+		 * @Title: findUserById 
+		 * @Description: 根据用户id查询用户信息
+		 */
+		public UserInfo findUserInfoById(@Param("userId") String userid);
+		
 
-	
-	
-	 /**   
-	  * @Title: findUserInfoByUsernum   
-	  * @Description: 根据用户唯一标识num查询用户信息       
-	  * @return: UserInfo        
-	  */  
-	public UserInfo findUserInfoByUsernum(@Param("usernum") int usernum);
-	
-	
-	 /** 
-	 * @Title: saveUser 
-	 * @Description: 根据用户对象保存用户信息 
-	 */
-	public int saveUserInfo(@Param("userInfo") UserInfo userInfo);
-	
-	
-	
-	 /** 
-	 * @Title: modifyUserInfoById 
-	 * @Description: 根据用户对象修改用户信息 
-	 */
-	public int modifyUserInfoById(@Param("userInfo") UserInfo userInfo);
-	
-	
-	 /** 
-	 * @Title: deleteUserInfoById 
-	 * @Description: 根据用户id删除用户信息
-	 */
-	public int deleteUserInfoById(@Param("userid") String userid);
+		
+		
+		 /**   
+		  * @Title: findUserInfoByUsernum   
+		  * @Description: 根据用户唯一标识num查询用户信息       
+		  * @return: UserInfo        
+		  */  
+		public UserInfo findUserInfoByUsernum(@Param("usernum") String usernum);
+		
+		
+		 /** 
+		 * @Title: saveUser 
+		 * @Description: 根据用户对象保存用户信息 
+		 */
+		public int saveUserInfo(@Param("userInfo") UserInfo userInfo);
+		
+		
+		
+		 /** 
+		 * @Title: modifyUserInfoById 
+		 * @Description: 根据用户对象修改用户信息 
+		 */
+		public int modifyUserInfoById(@Param("userInfo") UserInfo userInfo);
+		
+		
+		 /** 
+		 * @Title: deleteUserInfoById 
+		 * @Description: 根据用户id删除用户信息
+		 */
+		public int deleteUserInfoByNum(@Param("usernum") String usernum);
 }

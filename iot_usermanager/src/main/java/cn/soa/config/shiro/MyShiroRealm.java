@@ -24,6 +24,7 @@ import cn.soa.entity.UserOrganization;
 import cn.soa.entity.UserRole;
 import cn.soa.service.inter.RoleServiceInter;
 import cn.soa.service.inter.UserServiceInter;
+import cn.soa.util.GlobalUtil;
 
 import java.util.*;
 
@@ -47,34 +48,35 @@ public class MyShiroRealm extends AuthorizingRealm {
       */  
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
-        logger.info("---------------- 执行 Shiro 凭证认证 ----------------------");
+        logger.debug("---------------- 执行 Shiro 凭证认证 ----------------------");
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         /*
          * 获取请求的用户名和密码
          */
-        int userId = Integer.parseInt(token.getUsername());
-        String password = String.valueOf(token.getPassword());
+        String userId = token.getUsername();
+        String password = new String( token.getPassword() );
         
         /*
          *  从数据库获取对应用户名密码的用户
          */
         UserOrganization user = userService.getUserOrganByUsernum(userId);
-		UserInfo userInfo = userService.getUserInfoByNum(user.getUsernum());
-		logger.info("---------------- Shiro 凭证认证--------user-" + user);
-		logger.info("---------------- Shiro 凭证认证--------userInfo-" + userInfo);
+		logger.debug("---------------- Shiro 凭证认证--------user-" + user);
 		
         /*
          * 用户名比对
          */
         if ( user != null ) {
-        	if ( userInfo == null ) {
-                 throw new RuntimeException("登录失败，用户信息不存在");        
-        	}
             // 用户为禁用状态
-            if (userInfo.getState() != 0) {
+            if (user.getState() != 0) {
                 throw new DisabledAccountException();        
             }
-            logger.info("---------------- Shiro 凭证认证成功 ----------------------");
+            logger.debug("---------------- Shiro 凭证认证成功 ----------------------");
+            
+            /*
+             * 设置cookie
+             */
+			GlobalUtil.addCookie( "name", user.getName() );
+			
             SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
             		user, //用户
             		user.getUser_password(), //密码
@@ -94,7 +96,7 @@ public class MyShiroRealm extends AuthorizingRealm {
       */  
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        logger.info("---------------- 执行 Shiro 权限获取 ---------------------");
+        logger.debug("---------------- 执行 Shiro 权限获取 ---------------------");
         Object principal = principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         
@@ -114,9 +116,9 @@ public class MyShiroRealm extends AuthorizingRealm {
 /*            Set<String> permissions = userService.findPermissionsByUserId(userLogin.getId());
             authorizationInfo.addStringPermissions(permissions);*/
         }
-        logger.info("---- 获取到以下权限 ----");
-        logger.info(authorizationInfo.getStringPermissions().toString());
-        logger.info("---------------- Shiro 权限获取成功 ----------------------");
+        logger.debug("---- 获取到以下权限 ----");
+        logger.debug(authorizationInfo.getStringPermissions().toString());
+        logger.debug("---------------- Shiro 权限获取成功 ----------------------");
         return authorizationInfo;
     }
 
