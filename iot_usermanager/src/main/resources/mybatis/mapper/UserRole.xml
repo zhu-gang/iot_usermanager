@@ -4,18 +4,21 @@
  
 <mapper namespace="cn.soa.dao.UserRoleMapper">
 	<sql id="userRoleFiled">
-		name, create_time,create_time,state, note, remark1 , remark2,rolid
+	last_modify_time,	name, create_time,create_time,state, note, remark1 , remark2,rolid
 	</sql>
 
 
 	<!-- ===========================1、查询===============================  -->
+	
 	<!-- 分页查询角色信息 -->
 	<select id="queryAllroles" resultType="cn.soa.entity.UserRole" >
 		select <include refid="userRoleFiled"> </include> from 
 		(select ROWNUM num, role.* from  iot_user_role role order by rolid) a 
+		<if test="first != 0  and last!= 0  ">	
   	   where <![CDATA[ 
-        num >#{first} and num<=#{last}
+        num >#{pagefirst} and num<=#{last}
      ]]>  
+     </if>
 	</select>
 	<!-- 统计数据 -->
 		<select id="countRoles" resultType="int" >
@@ -37,9 +40,15 @@
 	</select>
 	
 	
-	
-	
-	
+	<!-- 根据角色查询对应的所有用户 -->
+	<select id="queryAllorgnInfo" resultType="cn.soa.entity.UserOrganization">
+		select * from IOT_USER_ORGANIZATION 
+	</select>
+	<!-- 查询出组织机构信息 -->
+	<select id="queryUsersByRold" resultType="cn.soa.entity.UserOrganization" parameterType="string">
+			select org.orgid,org.name,org.is_parent,org.usernum,org.parent_id from IOT_USER_USER_ROLE  ur left join IOT_USER_ORGANIZATION org  on ur.USERID=org.ORGID
+			where ur.ROLID=#{ROLID}
+	</select>
 	
 	<!-- ===========================2、新增===============================  -->
 	
@@ -130,7 +139,14 @@
 		delete from IOT_USER_ROLE
 		where rolid = #{ rolid }	
 	</delete>
-	
+	<!-- 批量删除角色 -->
+		<delete id="deleteRolesInIds" parameterType="string">
+		delete from IOT_USER_ROLE
+		where rolid  in
+		<foreach collection="ids" item="rolid" open="(" close=")" separator=",">
+			 #{ rolid }	
+		</foreach>	
+	</delete>
 	<!-- 根据用户id、用户角色id，增加关联关系 -->
 	<insert id="saveUserAndRoleById"  parameterType="string">
 		insert into IOT_USER_USER_ROLE
@@ -158,7 +174,7 @@
 		delete from IOT_USER_USER_ROLE
 		where userid = #{user.userid} and rolid = #{userRole.rolid}
 	</delete>
-	
+
 </mapper>
  
 

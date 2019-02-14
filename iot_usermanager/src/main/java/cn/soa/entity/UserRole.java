@@ -35,8 +35,8 @@ public class UserRole implements Serializable {
 	private String rolid;
 	private String name;
 	private Integer state;
-	private Date create_time;
-	private Date last_modify_time;
+	private String create_time;
+	private String last_modify_time;
 	private String note;
 	private Integer remark1;
 	private String remark2;

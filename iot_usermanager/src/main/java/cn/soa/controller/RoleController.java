@@ -11,6 +11,7 @@
         
 package cn.soa.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -65,9 +66,15 @@ public class RoleController{
 	private static Logger logger = LoggerFactory.getLogger( RoleController.class );
 	
 	@RequestMapping("/roles")
-	public ResultJson queryAllroles(@RequestParam("page") int page ,@RequestParam("limit") int pageSize) {
+	public ResultJson queryAllroles(@RequestParam(value="page",required = false) Integer page ,@RequestParam(value="limit",required = false) Integer pageSize) {
+		
 		int count =roleService.countRoles();
 		return new ResultJson(0,""+count,roleService.queryAllroles(page,pageSize));
+//		List<UserRole> list=new ArrayList<UserRole>();
+//		list.add(new UserRole("超级管理员",1, "具备一切权限", 1, "超级管理员"));
+//		list.add(new UserRole("管理员1",1, "具备管理员一切权限1", 1, "管理员"));
+//		list.add(new UserRole("管理员2",1, "具备管理员一切权限1", 1, "管理员"));
+//		return new ResultJson(0,"",list);
 	}
 	@RequestMapping("/addOrUpdateRole")
 	public ResultJson addOrUpdateRoles(UserRole userRole) {
@@ -81,6 +88,28 @@ public class RoleController{
 			return new ResultJson(0,"角色操作成功");
 		}
 		return new ResultJson(1,"角色操作失败");
+		
+	}
+	/**
+	 * 批量删除角色
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping("/deleteRoles")
+	public ResultJson deleteRoles(@RequestParam("ids")String  ids) {
+		List<String> lists=new ArrayList<String>();
+		String[] role_ids=ids.split(",");
+		System.out.println(role_ids);
+		int count=roleService.deleteRolesInIds(role_ids);
+		if(count>0) {
+			return new ResultJson(0);
+		}
+		return new ResultJson(1);
+	}
+
+	@RequestMapping("/queryUsersByRold")
+	public ResultJson queryUsersByRold(String rolid) {
+		return new ResultJson(roleService.queryUsersByRold(rolid));
 		
 	}
 }
