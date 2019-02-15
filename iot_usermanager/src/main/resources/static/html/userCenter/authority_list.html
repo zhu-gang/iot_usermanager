@@ -7,7 +7,8 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>权限列表</title>
-<link rel="stylesheet" href="../../jsPackage/layui-v2.4.5/css/layui.css" media="all">
+<link rel="stylesheet" href="../../jsPackage/layui-v2.4.5/css/layui.css"
+	media="all">
 <link rel="stylesheet" href="../../css/userCenter/authority_list.css" />
 <style>
 input {
@@ -95,8 +96,8 @@ input:focus {
 					<div class="layui-unselect layui-form-select downpanel">
 						<div class="layui-select-title">
 							<span class="layui-input layui-unselect" id="treeclass">请选择</span>
-							<input type="hidden" id="resource_id" name="selectID" value="0"> <i
-								class="layui-edge"></i>
+							<input type="hidden" id="resource_id" name="selectID" value="0">
+							<i class="layui-edge"></i>
 						</div>
 						<dl class="layui-anim layui-anim-upbit">
 							<dd>
@@ -109,7 +110,7 @@ input:focus {
 			<div class="layui-form-item">
 				<label class="layui-form-label">权限备注</label>
 				<div class="layui-input-inline">
-					<textarea name="authority_note"  lay-verify="authority_note" 
+					<textarea name="authority_note" lay-verify="authority_note"
 						placeholder="请输入" class="layui-textarea" id="authority_note"></textarea>
 				</div>
 			</div>
@@ -127,6 +128,19 @@ input:focus {
 
 
 		</form>
+	</div>
+
+	<!-- 权限新增角色弹出层 -->
+	<div class="layui-inline" style="display: none;text-align: center;width: 100%"
+		id="add_authority_role">
+
+
+		<div class="layui-inline" style="width: 90%">
+			<table id="auth_add_table" class="layui-table"
+				lay-filter="auth_add_table" style="width: 90%"></table>
+		</div>
+
+		
 	</div>
 
 	<script type="text/html" id="role_view">

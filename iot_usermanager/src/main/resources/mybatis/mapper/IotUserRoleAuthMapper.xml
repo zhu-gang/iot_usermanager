@@ -7,7 +7,7 @@
     <result column="AUTID " jdbcType="VARCHAR" property="autid" />
   </resultMap>
   <sql id="Base_Column_List">
-    ROL_AUT_ID, ROLID, "AUTID "
+    ROL_AUT_ID, ROLID, AUTID
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -15,10 +15,28 @@
     from IOT_USER_ROLE_AUTH
     where ROL_AUT_ID = #{rolAutId,jdbcType=VARCHAR}
   </select>
+  
+  <!-- 根据AUTID查询ROLID -->
+  <select id="selectByAutid" parameterType="java.lang.String" resultType="java.lang.String">
+  	select 
+  		ROLID
+  	from 
+  		IOT_USER_ROLE_AUTH
+  	where
+  		AUTID = #{authorityId,jdbcType=VARCHAR}
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from IOT_USER_ROLE_AUTH
     where ROL_AUT_ID = #{rolAutId,jdbcType=VARCHAR}
   </delete>
+  
+  <delete id="deleteByAutid" parameterType="java.lang.String">
+  	delete from IOT_USER_ROLE_AUTH
+    where AUTID = #{autid,jdbcType=VARCHAR}
+  </delete>
+  
+  
   <insert id="insert" parameterType="cn.soa.entity.IotUserRoleAuth">
     insert into IOT_USER_ROLE_AUTH (ROL_AUT_ID, ROLID, "AUTID "
       )
@@ -35,7 +53,7 @@
         ROLID,
       </if>
       <if test="autid != null">
-        "AUTID ",
+        AUTID,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">

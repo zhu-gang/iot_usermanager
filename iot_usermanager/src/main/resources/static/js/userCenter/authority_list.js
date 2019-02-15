@@ -48,7 +48,7 @@ layui.config({
 								width : 80,
 								align : 'center',
 								templet : function(d) {
-									console.log(d);
+									// console.log(d);
 									if (d.type == 0) {
 										return '<span class="layui-badge layui-bg-gray">模块</span>';
 									} else if (d.type == 1) {
@@ -151,7 +151,7 @@ layui.config({
 					url : '/resource/getResourceInfoOfNode',
 					dataType : 'json',
 					success : function(data) {
-						console.log(data.data);
+						// console.log(data.data);
 						tree({
 									elem : "#classtree",
 									nodes : data.data,
@@ -232,15 +232,17 @@ layui.config({
 					});
 
 			// 监听更改按钮点击事件
-			form.on('submit(btn_commit)', function(data) {
+			form.on('submit(btn_update)', function(data) {
 
 						// 获取数据
+						var authority_id = $("#authority_id").val();// 权限id
 						var authority_name = $("#authority_name").val();// 权限名称
 						var authority_type = data.field.authority_type// 权限类型
 						var resource_id = $("#resource_id").val();// 权限对应资源
 						var authority_note = $("#authority_note").val();// 权限备注
 
 						var authority = {
+							autid : authority_id,
 							resourceid : resource_id,
 							type : authority_type,
 							name : authority_name,
@@ -275,10 +277,12 @@ layui.config({
 						layer.close(add_layer);
 						return false;
 					});
+
 			// 监听行工具事件
+			var add_role_layer;
 			table.on('tool(auth-table)', function(obj) {
-				var data = obj.data;
-				console.log(obj)
+				// var data = obj.data;
+				// console.log(obj)
 				if (obj.event === 'del') {
 					layer.confirm('若为父级数据，其所有子级数据都将被删除！确定删除该数据吗？', function(
 									index) {
@@ -309,7 +313,7 @@ layui.config({
 								layer.close(index);
 							});
 				} else if (obj.event === 'edit') {
-					console.log(">>>>>>>>>>>>");
+					// console.log(">>>>>>>>>>>>");
 
 					/**
 					 * 清除数据
@@ -345,7 +349,7 @@ layui.config({
 						url : '/resource/getResourceInfoOfNode',
 						dataType : 'json',
 						success : function(data) {
-							console.log(data.data);
+							// console.log(data.data);
 							tree({
 								elem : "#classtree",
 								nodes : data.data,
@@ -362,6 +366,112 @@ layui.config({
 								}
 							});
 
+						},
+						error : function() {
+
+						}
+
+					});
+
+				} else if (obj.event == 'detail') {
+					// 查看角色按钮
+					add_role_layer = layer.open({
+						title : '资源编辑',
+						area : ['40%', '60%'], // 宽高
+						type : 1,
+						btn : ['提交', '取消'],
+						yes : function(index, layero) {
+							var selectInfo = table
+									.checkStatus('auth_add_table').data;
+							var select_roleIds = [];
+							$.each(selectInfo, function(index, element) {
+										select_roleIds.push(element.rolid);
+									});
+
+							// 发送请求插入权限数据
+							$.ajax({
+										url : '/roleAuthority/changeToAuthority',
+										dataType : 'json',
+										type:'post',
+										data : {
+											rolids : select_roleIds,
+											authorityId : obj.data.autid
+										},
+										success : function(data) {
+											if (data.state == 0) {
+												layer.msg("角色权限修改成功！！！");
+											} else {
+												layer.msg("角色权限修改失败，请联系管理员！！！");
+											}
+										},
+										error : function() {
+											layer.msg("角色权限修改失败，请联系管理员！！！");
+										}
+
+									});
+
+							layer.close(add_role_layer);
+						},
+						btn2 : function(index, layero) {
+							// 按钮【取消】的回调
+						},
+						content : $('#add_authority_role')
+					});
+
+					var roleIds;
+					// 发送请求获取已有权限
+					$.ajax({
+								url : '/roleAuthority/getRoleIdByAuthorityId',
+								dataType : 'json',
+								data : {
+									authorityId : obj.data.autid
+
+								},
+								success : function(data) {
+									roleIds = data.data
+								},
+								error : function() {
+
+								}
+
+							});
+
+					// 发送请求获取角色列表
+					$.ajax({
+						url : '/role/roles',
+						dataType : 'json',
+						success : function(data) {
+							console.log(data.data);
+							$.each(data.data, function(index, element) {
+										if ($.inArray(element.rolid, roleIds) != -1) {
+											element.LAY_CHECKED = true;
+										}
+
+									});
+
+							table.render({
+										elem : '#auth_add_table',
+										// url : '/role/roles',
+										data : data.data,
+										page : false,
+										cols : [[{
+													type : 'checkbox'
+												}, {
+													field : 'rolid',
+													title : '角色id',
+													hide : true
+												}, {
+													field : 'name',
+													title : '角色名称'
+												}
+
+										]],
+										done : function() {
+											console.log(table);
+											layer.closeAll('loading');
+
+										}
+									});
 						},
 						error : function() {
 

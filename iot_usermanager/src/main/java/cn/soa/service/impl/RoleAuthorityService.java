@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.soa.dao.IotUserAuthorityMapper;
+import cn.soa.dao.IotUserRoleAuthMapper;
 import cn.soa.dao.RoleAuthorityMapper;
 import cn.soa.entity.IotUserAuthority;
+import cn.soa.entity.IotUserRoleAuth;
 import cn.soa.entity.RoleAuthority;
 import cn.soa.service.inter.RoleAuthorityServiceInter;
 
@@ -28,6 +30,9 @@ public class RoleAuthorityService implements RoleAuthorityServiceInter {
 
 	@Autowired
 	private RoleAuthorityMapper roleAuthorityMapper;
+
+	@Autowired
+	private IotUserRoleAuthMapper roleAuthMapper;
 
 	/*
 	 * (non-Javadoc)
@@ -70,8 +75,13 @@ public class RoleAuthorityService implements RoleAuthorityServiceInter {
 	 */
 	@Override
 	public int updateAuthorityInfo(List<IotUserAuthority> authorityInfo) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int result = 0;
+
+		for (IotUserAuthority authority : authorityInfo) {
+			result += authorityMapper.updateByPrimaryKeySelective(authority);
+		}
+		return result;
 	}
 
 	/*
@@ -87,6 +97,56 @@ public class RoleAuthorityService implements RoleAuthorityServiceInter {
 		int result = 0;
 		for (String autid : ids) {
 			result += authorityMapper.deleteByPrimaryKey(autid);
+		}
+
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * cn.soa.service.inter.RoleAuthorityServiceInter#getRoleIdByAuthorityId(java.
+	 * lang.String)
+	 */
+	@Override
+	public List<String> getRoleIdByAuthorityId(String authorityId) {
+
+		List<String> roleIds = roleAuthMapper.selectByAutid(authorityId);
+
+		return roleIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * cn.soa.service.inter.RoleAuthorityServiceInter#changeToAuthority(java.util.
+	 * List, java.lang.String)
+	 */
+	@Override
+	public Integer changeToAuthority(List<String> rolids, String authorityId) {
+
+		Integer result = 0;
+
+		/**
+		 * 根据authorityId删除所有角色
+		 */
+		result += roleAuthMapper.deleteByAutid(authorityId);
+
+		/**
+		 * 插入权限对应的角色
+		 */
+
+		if(rolids == null || rolids.isEmpty()) {
+			return result;
+		}
+		for (String rolid : rolids) {
+			IotUserRoleAuth userRoleAuth = new IotUserRoleAuth();
+			userRoleAuth.setAutid(authorityId);
+			userRoleAuth.setRolid(rolid);
+			result += roleAuthMapper.insertSelective(userRoleAuth);
+
 		}
 
 		return result;
