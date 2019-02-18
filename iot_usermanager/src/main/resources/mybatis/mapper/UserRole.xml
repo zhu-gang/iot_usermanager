@@ -105,8 +105,14 @@
 			</trim>
 		</foreach>
 	</insert>
-	
-	
+	<!-- 2.3、批量增加用户角色关系信息 --><!-- 对象以下属性值不能为null -->
+		<insert id="saveUserUserRoleInBatch" parameterType="list" useGeneratedKeys="false">
+		insert all
+		<foreach collection="lists" separator="" item="item" index="index">
+			into IOT_USER_USER_ROLE(userid,rolid) values (#{item.userid},#{item.rolid})	
+		</foreach>
+		SELECT 1 FROM DUAL
+	</insert>
 	
 	<!-- ===========================3、修改===============================  -->
 	
@@ -174,7 +180,11 @@
 		delete from IOT_USER_USER_ROLE
 		where userid = #{user.userid} and rolid = #{userRole.rolid}
 	</delete>
-
+	<!--  -->
+	<delete id="deleteUserUserAndRolebyId">
+		delete from IOT_USER_USER_ROLE
+		where rolid=#{rolid} 
+	</delete>
 </mapper>
  
 

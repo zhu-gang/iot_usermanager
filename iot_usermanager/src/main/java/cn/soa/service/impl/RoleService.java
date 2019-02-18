@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import cn.soa.dao.UserRoleMapper;
 import cn.soa.entity.UserOrganization;
 import cn.soa.entity.UserRole;
+import cn.soa.entity.UserRoleRelation;
 import cn.soa.service.inter.RoleServiceInter;
 
 
@@ -115,7 +116,23 @@ public class RoleService implements RoleServiceInter{
 			lists.add(map);
 		}
 
+		
 		return lists;
+	}
+
+
+
+	@Override
+	public int deleteUserUserAndRolebyId(String rolid) {
+		// TODO Auto-generated method stub
+		return  userRoleMapper.deleteUserUserAndRolebyId(rolid);
+	}
+
+
+	@Override
+	 public int saveUserUserRoleInBatch(List<UserRoleRelation> lists) {
+		return userRoleMapper.saveUserUserRoleInBatch(lists);
+		
 	}
 
 

@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 
 import cn.soa.entity.UserOrganization;
 import cn.soa.entity.UserRole;
+import cn.soa.entity.UserRoleRelation;
 
 
 /**
@@ -142,4 +143,16 @@ public interface UserRoleMapper {
 	 * @return List
 	 */
 	public List<UserOrganization>queryAllorgnInfo();
+	/**
+	 * @Title: saveUserUserRoleInBatch 
+	 * @Description: 批量添加用户角色关系
+	 * @return int
+	 */
+	public int saveUserUserRoleInBatch(@Param("lists")List<UserRoleRelation> lists);
+	/**
+	 * @Title: saveUserUserRoleInBatch 
+	 * @Description: 批量删除用户角色关系
+	 * @return int
+	 */
+	public int deleteUserUserAndRolebyId(@Param("rolid")String rolid);
 }
