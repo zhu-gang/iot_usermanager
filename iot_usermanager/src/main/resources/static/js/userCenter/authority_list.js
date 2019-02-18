@@ -1,5 +1,6 @@
 layui.config({
-			base : '../../module/'
+//			base : '../../module/'
+			base : '/jsPackage/web/design/module/'
 		}).extend({
 			treetable : 'treetable-lay/treetable'
 		}).use(['table', 'layer', 'treetable', 'form', 'tree', 'upload'],

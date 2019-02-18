@@ -26,7 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
   */
 
 @Controller
-@RequestMapping("/static")
+//@RequestMapping("/static")
+@RequestMapping("/jsPackage/web/design")
 public class StaticHtmlController {
 	private static Logger logger = LoggerFactory.getLogger( StaticHtmlController.class );
 
