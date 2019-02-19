@@ -19,6 +19,7 @@ import org.apache.ibatis.annotations.Param;
 import cn.soa.entity.AuthInfo;
 import cn.soa.entity.UserOrganization;
 import cn.soa.entity.UserRole;
+import cn.soa.entity.UserRoleRelation;
 
 
 /**
@@ -58,4 +59,17 @@ public interface RoleServiceInter {
 	 */  
 	ArrayList<AuthInfo> findAuthByRolidServ(String rolid);
 
+    /**
+	 * @Title: queryUsersByRold 
+	 * @Description: 批量删除用户角色关系
+	 * @return List
+	 */
+	  public int deleteUserUserAndRolebyId(String rolid );
+	   /**
+		 * @Title: queryUsersByRold 
+		 * @Description: 批量增加用户角色关系
+		 * @return List
+		 */
+	
+	 public int saveUserUserRoleInBatch(List<UserRoleRelation> lists);
 }
