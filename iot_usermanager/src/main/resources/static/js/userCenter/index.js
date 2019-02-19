@@ -5,59 +5,56 @@
 var element = layui.element,
 	layer = layui.layer,
 	logoutUrl = ipPort + "/user/logout",	
+	roleAuthUrl = ipPort + "/user/role/auths",	
 	username;
 //菜单配置
-var menoSon = {
-	"userControl" : "用户管理,角色管理,权限管理,系统通知",
-	"equipControl" : ""
-};
-//侧边菜单配置
-var navMenoSon = {
-	"用户管理" : "userManager" ,
-	"角色管理" : "roleManager" ,
-	"权限管理" : "authManager" ,
-	"系统通知" : "systemNotice"
-};
-//侧边菜单Url配置
-var navMenoSon = {
-	"userManager" : ipPort + "/static/userManager",
-	"roleManager" : ipPort + "/static/roleManager",
-	"authManager" : ipPort + "/static/authManager",
-	"systemNotice" : ipPort + "/static/systemNotice"
-};
-
-var menoArr = [
-	{
-		"id" : "1", 
-		"first" : "首页", 
-		"second" : "快捷导航1,快捷导航2,快捷导航3",
-		"url":""		 
-	},
-	{
-		"id" : "2", 
-		"first" : "设备管理", 
-		"second" : "设备管理1,设备管理2,设备管理3,设备管理4",
-		"url":""		 
-	},
-	{
-		"id" : "3", 
-		"first" : "用户模块", 
-		"second" : "用户管理,角色管理,权限管理,系统通知",
-		"url":"/html/userCenter/userManager.html,/html/userCenter/roleManager.html,/html/userCenter/authority_list.html,/html/userCenter/notice.html"		 
-	},
-	{
-		"id" : "4", 
-		"first" : "其他", 
-		"second" : "其他1,其他2",
-		"url":""		 
-	}
-]
-	
+var menoArr;
+//= [
+//	{
+//		"id" : "1", 
+//		"first" : "首页", 
+//		"second" : "快捷导航1,快捷导航2,快捷导航3",
+//		"url": ""		 
+//	},
+//	{
+//		"id" : "2", 
+//		"first" : "设备管理", 
+//		"second" : "设备管理1,设备管理2,设备管理3,设备管理4",
+//		"url":""
+//	},
+//	{
+//		"id" : "3", 
+//		"first" : "用户模块", 
+//		"second" : "用户管理,菜单管理,角色管理,权限管理,系统通知",
+//		"url":"/html/userCenter/userManager.html,/html/userCenter/resource_list.html,/html/userCenter/roleManager.html,/html/userCenter/authority_list.html,/html/userCenter/notice.html"		 
+//	},
+//	{
+//		"id" : "4", 
+//		"first" : "其他", 
+//		"second" : "其他1,其他2",
+//		"url":""		 
+//	}
+//]
+//	
 /**
  * 初始化加载
  * @type 
  */
 $(function(){	
+	/*
+	 * 初始化菜单权限
+	 */
+	ajax( 'get', roleAuthUrl, {}, getAuthsSF, false );
+	
+	/*
+	 * 初始化菜单权限请求成功回调函数
+	 */
+	function getAuthsSF( data ){
+		console.log( '-------初始化菜单权限请求成功回调函数---------');
+		console.log( data );		
+		menoArr = data
+	}
+	
 	/*
 	 * 初始化echart图
 	 */

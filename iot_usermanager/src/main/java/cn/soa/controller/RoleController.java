@@ -112,4 +112,6 @@ public class RoleController{
 		return new ResultJson(roleService.queryUsersByRold(rolid));
 		
 	}
+	
+	
 }
