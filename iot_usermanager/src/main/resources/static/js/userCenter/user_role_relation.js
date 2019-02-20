@@ -31,7 +31,12 @@ $(function(){
 					 area: ['500px', '450px'],
 					 cancel: function(){ 
 						 $('#popUpdateTest').hide();
-					 }
+					 },
+					 success:function(layero){
+					     var mask = $(".layui-layer-shade");
+					     mask.appendTo(layero.parent());
+					     //其中：layero是弹层的DOM对象
+					}
 				 });
 			}
 	}
@@ -199,6 +204,11 @@ $(function(){
 						cancel:function(){
 							  layer.closeAll();
 						      $('.org').hide();
+						},
+						success:function(layero){
+						     var mask = $(".layui-layer-shade");
+						     mask.appendTo(layero.parent());
+						     //其中：layero是弹层的DOM对象
 						}
 					});
 		}
