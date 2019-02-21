@@ -13,6 +13,7 @@ package cn.soa.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -78,9 +79,24 @@ public class UserController {
 		}
 	}
 	
+	/**   
+	 * @Title: getUsersAll   
+	 * @Description:  
+	 * @param: @return      
+	 * @return: UserTableJson<List<UserOrganization>>        
+	 */ 
+	@GetMapping("/users")
+	public ResultJson<List<UserOrganization>> getUsersAll(){
+		List<UserOrganization> users = userService.findUsersAll();
+		if( users != null ) {
+			return new ResultJson<List<UserOrganization>>(  0, "查询成功", users);
+		}
+		return new ResultJson<List<UserOrganization>>(  1, "查询失败", users);
+	}
+	
 	 /**   
 	  * @Title: getUserAllList   
-	  * @Description: 查询所有用户       
+	  * @Description: 查询所有组织       
 	  * @return: UserTableJson<List<UserOrganization>>        
 	  */  
 	@PostMapping("/list")
@@ -119,27 +135,27 @@ public class UserController {
 	
 	 /**   
 	  * @Title: registryUserContr   
-	  * @Description: 注册用户       
+	  * @Description: 新增组织    
 	  * @return: ResultJson<String> 返回新增用户主键           
 	  */  
 	@PostMapping("")
 	public ResultJson<String> registryUserContr(@RequestBody @Valid UserOrganization user){
 		logger.debug("C----registryContr--- user ---" + user);
-		String i = userService.saveUserServ(user);
-		logger.debug("C----注册用户返回值 ---" + i);
+		String i = userService.saveOrganServ(user);
+		logger.debug("C----新增组织返回值 ---" + i);
 		if( "-1".equals(i) ) {
 			return new ResultJson<String>(1, "未知错误", i + "" );
 		}else if( "0".equals(i) ) {
-			return new ResultJson<String>(1, "新增用户失败 ，插入数据为0", i + "" );
+			return new ResultJson<String>(1, "新增组织失败 ，插入数据为0", i + "" );
 		}else {
-			return new ResultJson<String>(0, "新增用户成功", i + "" );
+			return new ResultJson<String>(0, "新增组织成功", i + "" );
 		}
 	}
 	
 	
 	 /**   
 	  * @Title: registryUserInfoContr   
-	  * @Description: 注册用户信息       
+	  * @Description: 新增用户信息       
 	  * @return: ResultJson<String>    
 	  */  
 	@PostMapping("/userInfo")
@@ -262,6 +278,86 @@ public class UserController {
 		}else {
 			logger.debug( "---C---- 用户角色查询失败或无任何权限 ------authInfos：" + authInfos );
 			return new ResultJson<List<AuthInfo>>( 1, "用户角色权限查询失败或无任何权限", null );
+		}
+	}
+	
+	/**   
+	 * @Title: getUserByNum   
+	 * @Description:  根据用户usernum查询用户
+	 * @param: @param usernum      
+	 * @return: void        
+	 */  
+	@GetMapping("/users/{usernum}")
+	public ResultJson<UserOrganization> getUserByNum( @PathVariable("usernum") String usernum ) {
+		logger.debug("-----C------- 根据用户usernum查询用户   ---- usernum： " + usernum);
+		UserOrganization u = userService.getUsersByNum(usernum);
+		if( u != null ) {
+			logger.debug( "---C---- 根据用户usernum查询用户成功------u：" + u );
+			return new ResultJson<UserOrganization>( 0, "查询用户成功", u ); 
+		}
+		logger.debug( "---C---- 根据用户usernum查询用户失败------u：" + u );
+		return new ResultJson<UserOrganization>( 1, "查询用户失败", null ); 
+	}
+	
+	/**   
+	 * @Title: saveUserBackIdContr   
+	 * @Description:   增加用户
+	 * @return: ResultJson<UserOrganization>        
+	 */  
+	@PostMapping("/users")
+	public ResultJson<UserOrganization> saveUserBackIdContr(
+			@RequestParam("usernum") String usernum, 
+			@RequestParam("name") String name  ){
+		logger.debug("-----C------- 增加用户   ---- usernum： " + usernum);
+		UserOrganization u = userService.saveUserBackId(usernum, name);
+		if( u != null ) {
+			logger.debug("-----C------- 增加用户成功   ----  " + u);
+			return new ResultJson<UserOrganization>( 0, "增加用户成功 ", u );
+		}else {
+			logger.debug("-----C------- 增加用户失败   ----  " + u);
+			return new ResultJson<UserOrganization>( 0, "增加用户失败 ", u );
+		}
+	}
+	
+	/**   
+	 * @Title: getInitOrgan   
+	 * @Description: 获取全部组织数据，并根据用户usernum初始化 数据
+	 * @return: UserTableJson<List<UserOrganization>>        
+	 */  
+	@GetMapping("/organ/{usernum}")
+	public UserTableJson<List<Map<String, Object>>> getInitOrgan(
+			@PathVariable("usernum") @NotBlank String usernum) {
+		logger.debug("--C---------- 获取全部组织数据，并根据用户usernum初始化 数据-----------");
+		logger.debug("--C----------usernum-----------" + usernum );
+		List<Map<String, Object>> lists = userService.getInitOrganServ(usernum);
+		logger.debug("--C----------lists-----------" + lists );
+		if( lists != null ) {
+			return new UserTableJson<List<Map<String, Object>>>( 
+					"", 0,"成功", lists, lists.size(), true );
+		}
+		return new UserTableJson<List<Map<String, Object>>>( 
+				"", 0, "失败", lists, 0, true );
+	}
+	
+	/**   
+	 * @Title: modifyUserParentId   
+	 * @Description:  修改usernum用户 的parentid
+	 * @return: UserTableJson<List<Map<String,Object>>>        
+	 */  
+	@PostMapping("/organ")
+	public ResultJson<String> modifyUserParentId(
+			@RequestParam("usernum") @NotBlank String usernum,
+			@RequestParam("parentid") @NotBlank String parentid){
+		logger.debug( "--C---------- 修改usernum用户 的parentid-----------" );
+		logger.debug( "usernum:" + usernum );
+		logger.debug( "parentid:" + parentid );
+		int i = userService.modifyUserParentidServ(usernum, parentid);
+		if( i > 0 ) {
+			logger.debug("-----C------- 修改usernum用户 的parentid成功  ----  " + i);
+			return new ResultJson<String>( 0, "修改成功 ", i + "" );
+		}else {
+			logger.debug("-----C------- 修改usernum用户 的parentid失败 ----  " + i);
+			return new ResultJson<String>( 0, "修改失败 ", "" );
 		}
 	}
 }

@@ -138,8 +138,6 @@ function modifyRegStateCB( jsonData ){
 var editObj=null,ptable=null,treeGrid=null,tableId='treeTable',layer=null;
 layui.config({
     base: '/jsPackage/web/design/extend/'
-}).extend({
-    treeGrid:'treeGrid'
 }).use(['jquery','treeGrid','layer'], function(){
     var $=layui.jquery;
     treeGrid = layui.treeGrid;//很重要
