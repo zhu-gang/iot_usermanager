@@ -5,59 +5,436 @@
 var element = layui.element,
 	layer = layui.layer,
 	logoutUrl = ipPort + "/user/logout",	
+	roleAuthUrl = ipPort + "/user/role/auths",	
 	username;
 //菜单配置
-var menoSon = {
-	"userControl" : "用户管理,角色管理,权限管理,系统通知",
-	"equipControl" : ""
-};
-//侧边菜单配置
-var navMenoSon = {
-	"用户管理" : "userManager" ,
-	"角色管理" : "roleManager" ,
-	"权限管理" : "authManager" ,
-	"系统通知" : "systemNotice"
-};
-//侧边菜单Url配置
-var navMenoSon = {
-	"userManager" : ipPort + "/static/userManager",
-	"roleManager" : ipPort + "/static/roleManager",
-	"authManager" : ipPort + "/static/authManager",
-	"systemNotice" : ipPort + "/static/systemNotice"
-};
-
-var menoArr = [
-	{
-		"id" : "1", 
-		"first" : "首页", 
-		"second" : "快捷导航1,快捷导航2,快捷导航3",
-		"url":""		 
-	},
-	{
-		"id" : "2", 
-		"first" : "设备管理", 
-		"second" : "设备管理1,设备管理2,设备管理3,设备管理4",
-		"url":""		 
-	},
-	{
-		"id" : "3", 
-		"first" : "用户模块", 
-		"second" : "用户管理,角色管理,权限管理,系统通知",
-		"url":"/html/userCenter/userManager.html,/html/userCenter/roleManager.html,/html/userCenter/authManager.html,/html/userCenter/notice.html"		 
-	},
-	{
-		"id" : "4", 
-		"first" : "其他", 
-		"second" : "其他1,其他2",
-		"url":""		 
-	}
-]
-	
+var menoArr;
+//= [
+//	{
+//		"id" : "1", 
+//		"first" : "首页", 
+//		"second" : "快捷导航1,快捷导航2,快捷导航3",
+//		"url": ""		 
+//	},
+//	{
+//		"id" : "2", 
+//		"first" : "设备管理", 
+//		"second" : "设备管理1,设备管理2,设备管理3,设备管理4",
+//		"url":""
+//	},
+//	{
+//		"id" : "3", 
+//		"first" : "用户模块", 
+//		"second" : "用户管理,菜单管理,角色管理,权限管理,系统通知",
+//		"url":"/html/userCenter/userManager.html,/html/userCenter/resource_list.html,/html/userCenter/roleManager.html,/html/userCenter/authority_list.html,/html/userCenter/notice.html"		 
+//	},
+//	{
+//		"id" : "4", 
+//		"first" : "其他", 
+//		"second" : "其他1,其他2",
+//		"url":""		 
+//	}
+//]
+//	
 /**
  * 初始化加载
  * @type 
  */
 $(function(){	
+	/*
+	 * 初始化菜单权限
+	 */
+	ajax( 'get', roleAuthUrl, {}, getAuthsSF, false );
+	
+	/*
+	 * 初始化菜单权限请求成功回调函数
+	 */
+	function getAuthsSF( data ){
+		console.log( '-------初始化菜单权限请求成功回调函数---------');
+		console.log( data );		
+		menoArr = data
+	}
+	
+	/*
+	 * 初始化echart图
+	 */
+	// 基于准备好的dom，初始化echarts实例
+//	var chart1 = echarts.init( $('#index_ehart_one')[0] );
+//	var chart2 = echarts.init( $('#index_ehart_two')[0] );
+//	var chart3 = echarts.init( $('#index_ehart_three')[0] );
+//	var chart4 = echarts.init( $('#index_ehart_four')[0] );
+//	var chart5 = echarts.init( $('#index_ehart_five')[0] );
+//	var chart6 = echarts.init( $('#index_ehart_six')[0] );
+//
+//    // 指定图表的配置项和数据
+//    var option1 = {
+//    		backgroundColor: '#0B2967',
+//    		title: {
+//    	        text: '设备异常数量',
+//    	        bottom: '0',
+//    	        left: 'center',
+//    	        textStyle: {
+//    	        	color: '#B2FCFB',
+//    	        },
+//    	    },
+//    	    tooltip: {
+//    	        trigger: 'item',
+//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
+//    	    }, 
+//    	    series: [    	        
+//    	    	{
+//    	            name:'访问来源',
+//    	            type:'pie',
+//    	            radius: ['45%', '65%'],
+//    	            avoidLabelOverlap: false,
+//    	            label: {
+//    	                show: false,
+//    	                position: 'center',
+//    	                normal: {
+//    	                    show: false,
+//    	                    position: 'center'
+//    	                },
+//    	                emphasis: {
+//    	                    show: false,
+//    	                    textStyle: {
+//    	                        fontSize: '10',
+//    	                        fontWeight: 'bold'
+//    	                    }
+//    	                }
+//    	            },
+//    	            labelLine: {
+//    	                normal: {
+//    	                    show: false
+//    	                }
+//    	            },
+//    	            data:[
+//    	            	{value:335, name:'32.3%',
+//    	                    label: {
+//    	                        show: true,
+//    	                        position: 'center',
+//    	                        fontSize: 22,
+//    	                        color: '#14EE3B',
+//    	                        fontWeight:'bold',
+//    	                    }
+//    	                },
+//    	                {value:110, name:'4',
+//    	                    label: {
+//    	                        show: false
+//    	                    }}
+//    	            ],
+//    	            color:['#03CDFD','#3595F5'],
+//    	        },
+//    	    ]
+//    	};
+//    
+//    var option2 = {
+//    		backgroundColor: '#0B2967',
+//    		title: {
+//    	        text: '设备异常数量',
+//    	        bottom: '0',
+//    	        left: 'center',
+//    	        textStyle: {
+//    	        	color: '#B2FCFB',
+//    	        },
+//    	    },
+//    	    tooltip: {
+//    	        trigger: 'item',
+//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
+//    	    },
+//    	    series: [
+//    	    	{
+//    	            name:'访问来源',
+//    	            type:'pie',
+//    	            radius: ['45%', '65%'],
+//    	            avoidLabelOverlap: false,
+//    	            label: {
+//    	                show: false,
+//    	                position: 'center',
+//    	                normal: {
+//    	                    show: false,
+//    	                    position: 'center'
+//    	                },
+//    	                emphasis: {
+//    	                    show: false,
+//    	                    textStyle: {
+//    	                        fontSize: '10',
+//    	                        fontWeight: 'bold'
+//    	                    }
+//    	                }
+//    	            },
+//    	            labelLine: {
+//    	                normal: {
+//    	                    show: false
+//    	                }
+//    	            },
+//    	            data:[
+//    	            	{value:335, name:'32.3%',
+//    	                    label: {
+//    	                        show: true,
+//    	                        position: 'center',
+//    	                        fontSize: 22,
+//    	                        color: '#14EE3B',
+//    	                        fontWeight:'bold',
+//    	                    }
+//    	                },
+//    	                {value:110, name:'4',
+//    	                    label: {
+//    	                        show: false
+//    	                    }}
+//    	            ],
+//    	            color:['#03CDFD','#3595F5'],
+//    	        },
+//    	    ]
+//    	};
+//    
+//    var option3 = {
+//    		backgroundColor: '#0B2967',
+//    		title: {
+//    	        text: '设备异常数量',
+//    	        bottom: '0',
+//    	        left: 'center',
+//    	        textStyle: {
+//    	        	color: '#B2FCFB',
+//    	        },
+//    	    },
+//    	    tooltip: {
+//    	        trigger: 'item',
+//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
+//    	    },
+//    	    series: [
+//    	    	{
+//    	            name:'访问来源',
+//    	            type:'pie',
+//    	            radius: ['45%', '65%'],
+//    	            avoidLabelOverlap: false,
+//    	            label: {
+//    	                show: false,
+//    	                position: 'center',
+//    	                normal: {
+//    	                    show: false,
+//    	                    position: 'center'
+//    	                },
+//    	                emphasis: {
+//    	                    show: false,
+//    	                    textStyle: {
+//    	                        fontSize: '10',
+//    	                        fontWeight: 'bold'
+//    	                    }
+//    	                }
+//    	            },
+//    	            labelLine: {
+//    	                normal: {
+//    	                    show: false
+//    	                }
+//    	            },
+//    	            data:[
+//    	            	{value:335, name:'32.3%',
+//    	                    label: {
+//    	                        show: true,
+//    	                        position: 'center',
+//    	                        fontSize: 22,
+//    	                        color: '#14EE3B',
+//    	                        fontWeight:'bold',
+//    	                    }
+//    	                },
+//    	                {value:110, name:'4',
+//    	                    label: {
+//    	                        show: false
+//    	                    }}
+//    	            ],
+//    	            color:['#03CDFD','#3595F5'],
+//    	        },
+//    	    ]
+//    	};
+//    
+//    var option4 = {
+//    		backgroundColor: '#0B2967',
+//    		title: {
+//    	        text: '设备异常数量',
+//    	        bottom: '0',
+//    	        left: 'center',
+//    	        textStyle: {
+//    	        	color: '#B2FCFB',
+//    	        },
+//    	    },
+//    	    tooltip: {
+//    	        trigger: 'item',
+//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
+//    	    },
+//    	    series: [
+//    	    	{
+//    	            name:'访问来源',
+//    	            type:'pie',
+//    	            radius: ['45%', '65%'],
+//    	            avoidLabelOverlap: false,
+//    	            label: {
+//    	                show: false,
+//    	                position: 'center',
+//    	                normal: {
+//    	                    show: false,
+//    	                    position: 'center'
+//    	                },
+//    	                emphasis: {
+//    	                    show: false,
+//    	                    textStyle: {
+//    	                        fontSize: '10',
+//    	                        fontWeight: 'bold'
+//    	                    }
+//    	                }
+//    	            },
+//    	            labelLine: {
+//    	                normal: {
+//    	                    show: false
+//    	                }
+//    	            },
+//    	            data:[
+//    	            	{value:335, name:'32.3%',
+//    	                    label: {
+//    	                        show: true,
+//    	                        position: 'center',
+//    	                        fontSize: 22,
+//    	                        color: '#14EE3B',
+//    	                        fontWeight:'bold',
+//    	                    }
+//    	                },
+//    	                {value:110, name:'4',
+//    	                    label: {
+//    	                        show: false
+//    	                    }}
+//    	            ],
+//    	            color:['#03CDFD','#3595F5'],
+//    	        },
+//    	    ]
+//    	};
+//    
+//    var option5 = {
+//    		backgroundColor: '#0B2967',
+//    		title: {
+//    	        text: '设备异常数量',
+//    	        bottom: '0',
+//    	        left: 'center',
+//    	        textStyle: {
+//    	        	color: '#B2FCFB',
+//    	        },
+//    	    },
+//    	    tooltip: {
+//    	        trigger: 'item',
+//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
+//    	    },
+//    	   
+//    	    series: [
+//    	    	{
+//    	            name:'访问来源',
+//    	            type:'pie',
+//    	            radius: ['45%', '65%'],
+//    	            avoidLabelOverlap: false,
+//    	            label: {
+//    	                show: false,
+//    	                position: 'center',
+//    	                normal: {
+//    	                    show: false,
+//    	                    position: 'center'
+//    	                },
+//    	                emphasis: {
+//    	                    show: false,
+//    	                    textStyle: {
+//    	                        fontSize: '10',
+//    	                        fontWeight: 'bold'
+//    	                    }
+//    	                }
+//    	            },
+//    	            labelLine: {
+//    	                normal: {
+//    	                    show: false
+//    	                }
+//    	            },
+//    	            data:[
+//    	            	{value:335, name:'32.3%',
+//    	                    label: {
+//    	                        show: true,
+//    	                        position: 'center',
+//    	                        fontSize: 22,
+//    	                        color: '#14EE3B',
+//    	                        fontWeight:'bold',
+//    	                    }
+//    	                },
+//    	                {value:110, name:'4',
+//    	                    label: {
+//    	                        show: false
+//    	                    }}
+//    	            ],
+//    	            color:['#03CDFD','#3595F5'],
+//    	        },
+//    	    ]
+//    	};
+//    
+//    var option6 = {
+//    		backgroundColor: '#0B2967',
+//    		title: {
+//    	        text: '设备异常数量',
+//    	        bottom: '0',
+//    	        left: 'center',
+//    	        textStyle: {
+//    	        	color: '#B2FCFB',
+//    	        },
+//    	    },
+//    	    tooltip: {
+//    	        trigger: 'item',
+//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
+//    	    },
+//    	    series: [
+//    	    	{
+//    	            name:'访问来源',
+//    	            type:'pie',
+//    	            radius: ['45%', '65%'],
+//    	            avoidLabelOverlap: false,
+//    	            label: {
+//    	                show: false,
+//    	                position: 'center',
+//    	                normal: {
+//    	                    show: false,
+//    	                    position: 'center'
+//    	                },
+//    	                emphasis: {
+//    	                    show: false,
+//    	                    textStyle: {
+//    	                        fontSize: '10',
+//    	                        fontWeight: 'bold'
+//    	                    }
+//    	                }
+//    	            },
+//    	            labelLine: {
+//    	                normal: {
+//    	                    show: false
+//    	                }
+//    	            },
+//    	            data:[
+//    	            	{value:335, name:'32.3%',
+//    	                    label: {
+//    	                        show: true,
+//    	                        position: 'center',
+//    	                        fontSize: 22,
+//    	                        color: '#14EE3B',
+//    	                        fontWeight:'bold',
+//    	                    }
+//    	                },
+//    	                {value:110, name:'4',
+//    	                    label: {
+//    	                        show: false
+//    	                    }}
+//    	            ],
+//    	            color:['#03CDFD','#3595F5'],
+//    	        },
+//    	    ]
+//    	};
+//    // 使用刚指定的配置项和数据显示图表。
+//    chart1.setOption( option1 );
+//    chart2.setOption( option2 );
+//    chart3.setOption( option3 );
+//    chart4.setOption( option4 );
+//    chart5.setOption( option5 );
+//    chart6.setOption( option6 );
+	
 	/*
 	 * 初始化加载一级菜单
 	 */
@@ -71,6 +448,7 @@ $(function(){
 		);
 	})	
 	element.init(); 
+	
 	
 	/*
 	 * 初始化加载二级菜单

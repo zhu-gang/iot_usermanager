@@ -11,7 +11,9 @@
         
 package cn.soa.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +22,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+
 import cn.soa.dao.UserInfoMapper;
 import cn.soa.dao.UserMapper;
 import cn.soa.entity.UserInfo;
 import cn.soa.entity.UserOrganization;
 import cn.soa.service.inter.UserServiceInter;
+import cn.soa.util.GlobalUtil;
 import cn.soa.dao.UserRoleMapper;
 
 
@@ -49,6 +54,23 @@ public class UserService implements UserServiceInter{
 	private UserRoleMapper userRoleMapper;
 	
 	
+	/**   
+	 * @Title: getUsersByNum   
+	 * @Description:  根据用户唯一标识查询用户 
+	 * @return: UserOrganization        
+	 */  
+	@Override
+	public UserOrganization getUsersByNum( String usernum ) {
+		UserOrganization u = null;
+		try {
+			u = userMapper.findUsersByNum(usernum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return u;
+	}
+	
 	 /**   
 	  * @Title: getUserOrganById   
 	  * @Description: 根据用户id查询用户信息       
@@ -60,6 +82,24 @@ public class UserService implements UserServiceInter{
 		return user;
 	}
 	
+	/**   
+	 * @Title: findUsersAll   
+	 * @Description:  查询所有用户非组织信息
+	 * @param: @return      
+	 * @return: List<UserOrganization>        
+	 */  
+	@Override
+	public List<UserOrganization> findUsersAll(){
+		List<UserOrganization> users = null;
+		try {
+			users = userMapper.findUsersAll();
+			return users;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("---S---------查询所有用户非组织信息报错--------users" + users);
+			return users;
+		}
+	}
 	
 	
 	 /**   
@@ -107,9 +147,9 @@ public class UserService implements UserServiceInter{
 	  * @return: int  返回新增用户主键      
 	  */  
 	@Override
-	public String saveUserServ(UserOrganization user) {
+	public String saveOrganServ(UserOrganization user) {
 		try {
-			int i = userMapper.saveUserBackId(user);
+			int i = userMapper.saveOrganBackId(user);
 			//检查插入条数
 			if( i < 0 ) {
 				return "-1";
@@ -172,6 +212,27 @@ public class UserService implements UserServiceInter{
 			return null;
 		}
 		return userAll;
+	}
+	
+	/**   
+	 * @Title: deleteUserAndInfoByNum   
+	 * @Description: 根据usernum删除用户
+	 * @param: @return      
+	 * @return: int        
+	 */  
+	@Transactional
+	@Override
+	public int deleteUserByNum( String usernum ) {
+		/*
+		 * 删除用户
+		 */
+		int i = deleteUserByNumServ(usernum);
+		if( i < 0 ) {
+			return -1;
+		}else if( i == 0 ){
+			return 0;
+		}
+		return i;
 	}
 	
 	/**   
@@ -242,6 +303,109 @@ public class UserService implements UserServiceInter{
 		int i ;
 		try {
 			i = userInfoMapper.deleteUserInfoByNum(usernum);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return i;
+	}
+	
+	/**   
+	 * @Title: saveUserBackId   
+	 * @Description: 根据id增加用户 ，返回id     
+	 * @return: int        
+	 */  
+	@Override
+	@Transactional
+	public UserOrganization saveUserBackId( String usernum, String name ) {
+		int i = 0;
+		try {
+			/*
+			 * 增加用户
+			 */
+			UserOrganization u = new UserOrganization();
+			u.setName(name);
+			u.setUsernum(usernum);
+			u.setIs_parent(1);
+			i = userMapper.saveUserBackId(u);
+			if( i > 0) {
+				return u;
+			}else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**   
+	 * @Title: getInitOrganServ   
+	 * @Description:  获取全部组织数据，并根据用户usernum初始化 数据 
+	 * @return: List<UserOrganization>        
+	 */  
+	@Transactional
+	@Override
+	public List<Map<String, Object>> getInitOrganServ( String usernum ){
+		logger.debug("---S------获取全部组织数据，并根据用户usernum初始化 数据  ------");
+		List<Map<String, Object>> lists = new ArrayList<Map<String, Object>>();
+		try {
+			//根据usernum用户查询parentid
+			UserOrganization currentUser = userMapper.findUserByUsernum(usernum);
+			String parentId = currentUser.getParent_id();
+			
+			//查询组织列表，并赋值
+			List<UserOrganization>  organs = userMapper.findUserAll();
+			for( UserOrganization u : organs ) {
+				Map<String, Object> currentMap = GlobalUtil.changePOJOIntoMap( u );
+				logger.debug( currentMap.toString() );
+				if( parentId != null && parentId.equals( u.getUsernum() ) ) {
+					currentMap.put( "lay_is_radio", true );
+					currentMap.put( "lay_is_open", true);
+				}
+				lists.add(currentMap);
+			}
+			return lists; 
+		} catch (Exception e) {
+			e.printStackTrace();	
+			return null;
+		}
+	}
+	
+	/**   
+	 * @Title: modifyUserParentidServ   
+	 * @Description: 修改usernum用户 的parentid  
+	 * @return: int        
+	 */ 
+	@Override
+	public int modifyUserParentidServ( String usernum, String parentId ) {
+		int i = -1;
+		try {
+			UserOrganization u = new UserOrganization();
+			u.setUsernum(usernum);
+			u.setParent_id(parentId);
+			i = userMapper.modifyUserBynum(u);
+			return i;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	/**   
+	 * @Title: modifyUserByIdServ   
+	 * @Description: 根据用户id修改用户信息  
+	 * @return: int        
+	 */ 
+	@Override
+	public int modifyUserByIdServ( String orgid, String usernum, String name  ) {
+		int i = -1;
+		try {
+			UserOrganization u = new UserOrganization();
+			u.setOrgid(orgid);
+			u.setUsernum(usernum);
+			u.setName(name);
+			i = userMapper.modifyUserById(u);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;

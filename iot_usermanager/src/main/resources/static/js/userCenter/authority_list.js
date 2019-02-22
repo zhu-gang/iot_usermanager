@@ -1,5 +1,6 @@
 layui.config({
-			base : '../../module/'
+//			base : '../../module/'
+			base : '/jsPackage/web/design/module/'
 		}).extend({
 			treetable : 'treetable-lay/treetable'
 		}).use(['table', 'layer', 'treetable', 'form', 'tree', 'upload'],
@@ -142,9 +143,14 @@ layui.config({
 
 				add_layer = layer.open({
 							title : '资源新增',
-							area : ['20%', '60%'], // 宽高
+							area : ['30%', '60%'], // 宽高
 							type : 1,
-							content : $('#authority_add')
+							content : $('#authority_add'),
+							success:function(layero){
+							     var mask = $(".layui-layer-shade");
+							     mask.appendTo(layero.parent());
+							     //其中：layero是弹层的DOM对象
+							}
 						});
 
 				$.ajax({
@@ -341,9 +347,14 @@ layui.config({
 
 					add_layer = layer.open({
 								title : '资源编辑',
-								area : ['20%', '60%'], // 宽高
+								area : ['30%', '60%'], // 宽高
 								type : 1,
-								content : $('#authority_add')
+								content : $('#authority_add'),	
+								success:function(layero){
+								     var mask = $(".layui-layer-shade");
+								     mask.appendTo(layero.parent());
+								     //其中：layero是弹层的DOM对象
+								}
 							});
 					$.ajax({
 						url : '/resource/getResourceInfoOfNode',
@@ -415,7 +426,12 @@ layui.config({
 						btn2 : function(index, layero) {
 							// 按钮【取消】的回调
 						},
-						content : $('#add_authority_role')
+						content : $('#add_authority_role'),
+						success:function(layero){
+						     var mask = $(".layui-layer-shade");
+						     mask.appendTo(layero.parent());
+						     //其中：layero是弹层的DOM对象
+						}
 					});
 
 					var roleIds;

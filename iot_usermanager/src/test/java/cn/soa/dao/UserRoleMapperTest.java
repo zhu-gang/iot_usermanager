@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import cn.soa.IotUsermanagerApplication;
+import cn.soa.entity.IotUserModuleResource;
 import cn.soa.entity.UserRole;
 
 @RunWith(SpringRunner.class)
@@ -28,6 +29,13 @@ public class UserRoleMapperTest {
 	public UserRoleMapper userRoleMapper;
 	
 	@Test
+	public void findAuthByRolid() {
+		String rolid = "77A987B996C744EFAEC54B5855F7C98E";
+		ArrayList<IotUserModuleResource> findAuthByRolid = userRoleMapper.findAuthByRolid(rolid);
+		System.out.println(findAuthByRolid);
+	}
+	
+	//@Test
 	public void findUserRoleByNum() {
 		String num = "11";
 		List<UserRole> findUserRoleByNum = userRoleMapper.findUserRoleByNum(num);

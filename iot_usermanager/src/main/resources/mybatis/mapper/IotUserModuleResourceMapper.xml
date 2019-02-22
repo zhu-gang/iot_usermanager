@@ -151,8 +151,6 @@
   		modId,NAME
   	FROM 
   		IOT_USER_MODULE_RESOURCE
-  	WHERE 
-  		IS_PARENT = '0'
   </select>
   
 </mapper>

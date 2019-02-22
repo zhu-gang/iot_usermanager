@@ -20,11 +20,17 @@ public class UserMapperTest {
 	
 	//@Test
 	public void findUserById() {
-		//String userId
+		//String userI
+	}
+	
+	//@Test
+	public void findUsersAll() {
+		List<UserOrganization> findUsersAll = userMapper.findUsersAll();
+		System.out.println(findUsersAll);
 	}
 	
 	//根据用户唯一标识num查询用户
-	@Test
+	//@Test
 	public void findUserByUsernum() {
 		String userNum = "1";
 		UserOrganization u = userMapper.findUserByUsernum(userNum);
@@ -57,9 +63,20 @@ public class UserMapperTest {
 		System.out.println(i);
 	}
 	
+	//@Test
+	public void saveUserBackId() {
+		UserOrganization u = new UserOrganization();
+		u.setUsernum( "test" );
+		u.setName( "name" );
+		u.setIs_parent(1);
+		int i = userMapper.saveUserBackId(u);
+		System.out.println(u.getOrgid());
+		System.out.println(i);
+	}
+	
 	//单个增加用户,返回id
-	@Test
-	public void saveUserBackId() {		
+	//@Test
+	public void saveOrganBackId() {		
 		String name = "王者荣耀";
 		String parent_id = "";
 		String usernum = "-1";
@@ -91,8 +108,8 @@ public class UserMapperTest {
 //		userMapper.saveUserBackId(u2);
 //		userMapper.saveUserBackId(u3);
 //		userMapper.saveUserBackId(u4);
-		userMapper.saveUserBackId(u5);
-		userMapper.saveUserBackId(u6);
+		userMapper.saveOrganBackId(u5);
+		userMapper.saveOrganBackId(u6);
 	}
 	
 //	@Test
@@ -116,14 +133,26 @@ public class UserMapperTest {
 //	}
 	
 	//修改用户
+	@Test
+	public void modifyUserById() {
+		UserOrganization u = new UserOrganization();
+		u.setOrgid("919B20B203E144CABF8B2C624A69C1A7");
+		u.setUsernum("11");
+		u.setName("后裔");
+		int i = userMapper.modifyUserById(u);
+		System.out.println(i);
+	}
+	
+	
+	
 	//@Test
-//	public void modifyUserById() {
-//		UserOrganization u2 = new UserOrganization(
-//				"小黑", 1, 3, "123456", 1, "dota");
-////		u2.setOrgid(13);
-////		int i = userMapper.modifyUserById(u2);
-////		System.out.println(i);
-//	}
+	public void modifyUserBynum() {
+		UserOrganization u = new UserOrganization();
+		u.setUsernum("11");
+		u.setParent_id("1");
+		int i = userMapper.modifyUserBynum(u);
+		System.out.println(i);
+	}
 	
 	//根据userId删除用户
 	//@Test
@@ -137,7 +166,7 @@ public class UserMapperTest {
 	//根据usernum删除用户
 	//@Test
 	public void deleteUserByNum() {
-		String usernum = "11111";
+		String usernum = "test11";
 		int i = userMapper.deleteUserByUsernum(usernum);
 		System.out.println(i);		
 	}

@@ -145,7 +145,7 @@ public class GlobalUtil {
 	
 	/**   
 	 * @Title: changePOJOIntoMap   
-	 * @Description: POJO对象转化为maop   
+	 * @Description: POJO对象转化为map   
 	 * @param: @param obj
 	 * @param: @return      
 	 * @return: Map<String,Object>        

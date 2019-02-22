@@ -1,5 +1,5 @@
 layui.config({
-			base : '../../module/'
+			base : '/jsPackage/web/design/module/'
 		}).extend({
 			treetable : 'treetable-lay/treetable'
 		}).use(['table', 'laydate', 'treetable', 'form'], function() {
@@ -244,9 +244,14 @@ layui.config({
 
 		add_layer = layer.open({
 					title : '资源新增',
-					area : ['20%', '60%'], // 宽高
+					area : ['30%', '60%'], // 宽高
 					type : 1,
-					content : $('#resource_add')
+					content : $('#resource_add'),
+					success:function(layero){
+					     var mask = $(".layui-layer-shade");
+					     mask.appendTo(layero.parent());
+					     //其中：layero是弹层的DOM对象
+					}
 				});
 		$.ajax({
 			url : '/resource/getParentResource',
@@ -421,9 +426,14 @@ layui.config({
 
 			add_layer = layer.open({
 						title : '资源编辑',
-						area : ['20%', '60%'], // 宽高
+						area : ['30%', '60%'], // 宽高
 						type : 1,
-						content : $('#resource_add')
+						content : $('#resource_add'),
+						success:function(layero){
+						     var mask = $(".layui-layer-shade");
+						     mask.appendTo(layero.parent());
+						     //其中：layero是弹层的DOM对象
+						}
 					});
 			$.ajax({
 				url : '/resource/getParentResource',

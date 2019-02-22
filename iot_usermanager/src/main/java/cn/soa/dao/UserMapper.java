@@ -26,6 +26,18 @@ import cn.soa.entity.UserOrganization;
  *
  */
 
+/**
+ * @ClassName: UserMapper
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author zhugang
+ * @date 2019年2月21日
+ */
+/**
+ * @ClassName: UserMapper
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author zhugang
+ * @date 2019年2月21日
+ */
 @Mapper
 public interface UserMapper {
 	
@@ -38,11 +50,18 @@ public interface UserMapper {
 	
 	 /**   
 	  * @Title: findUserByUsernum   
-	  * @Description: 根据用户唯一标识查询用户信息      
+	  * @Description: 根据用户唯一标识查询组织      
 	  * @return: UserOrganization        
 	  */  
 	public UserOrganization findUserByUsernum(@Param("userNum") String userNum);
 	
+
+	/**   
+	 * @Title: findUsersByNum   
+	 * @Description:  根据用户唯一标识查询用户 
+	 * @return: UserOrganization        
+	 */  
+	public UserOrganization findUsersByNum( String userNum );
 	
 	 /**   
 	  * @Title: findUserAll   
@@ -51,6 +70,13 @@ public interface UserMapper {
 	  */  
 	public List<UserOrganization> findUserAll();
 	
+	/**   
+	 * @Title: findUsersAll   
+	 * @Description: 查询所有用户非组织信息  
+	 * @param: @return      
+	 * @return: List<UserOrganization>        
+	 */  
+	public List<UserOrganization> findUsersAll();
 	
 	 /**   
 	  * @Title: findUsersAndState   
@@ -73,7 +99,7 @@ public interface UserMapper {
 	  * @return: int 返回新增数据id
 	  */
 	//public int saveUserBackId(@Param("userOrgan") UserOrganization userOrgan);
-	public int saveUserBackId(UserOrganization userOrgan);
+	public int saveOrganBackId(UserOrganization userOrgan);
 	
 	
 	 /** 
@@ -86,7 +112,7 @@ public interface UserMapper {
 	 * @Title: modifyUserById 
 	 * @Description: 修改用户信息 
 	 */
-	public int modifyUserById(@Param("userOrgan") UserOrganization userOrgan);
+	public int modifyUserBynum(@Param("userOrgan") UserOrganization userOrgan);
 	
 	
 	 /** 
@@ -94,8 +120,7 @@ public interface UserMapper {
 	 * @Description: 根据用户id删除用户
 	 */
 	public int deleteUserById(@Param("userid") String userid);
-	
-	
+		
 	 /**   
 	  * @Title: deleteUserByUsernum   
 	  * @Description: 根据usernum删除用户       
@@ -104,4 +129,19 @@ public interface UserMapper {
 	public int deleteUserByUsernum(@Param("usernum") String usernum);
 	
 	
+	/**   
+	 * @Title: saveUserBackId   
+	 * @Description: 根据id增加用户 ，返回id   
+	 * @return: int        
+	 */  
+	public int saveUserBackId( UserOrganization u );
+	
+	
+	/**   
+	 * @Title: modifyUserById   
+	 * @Description:  根据id修改用户  
+	 * @return: int        
+	 */  
+	public int modifyUserById( @Param("userOrgan") UserOrganization userOrgan );
+
 }
