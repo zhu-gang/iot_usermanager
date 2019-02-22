@@ -9,7 +9,9 @@ $(function(){
 		getUsersByNumUrl = ipPort + "/user/users",
 		addUserUrl = ipPort + "/user/users",
 		initOrganDataUrl = ipPort + "/user/organ",
-		modifyUserParentUrl = ipPort + "/user/organ";
+		modifyUserParentUrl = ipPort + "/user/organ",
+		modifyUserUrl = ipPort + "/user/user",
+		deleteUserUrl = ipPort + "/user";
 		
 
 	/**
@@ -25,6 +27,7 @@ $(function(){
 		console.log( '---------表格初始化请求成功回调函数----------' );
 //		console.log( data );
 		generateBTable( 'user_table', data );
+		hideElement();
 	}
 
 	/**
@@ -72,11 +75,15 @@ $(function(){
 		        	var addInfo = $( '#form_add_user' ).serialize();
 		        	console.log( addInfo );
 		        	ajax( 'post', addUserUrl, addInfo, addUserSF );
-		        	$( '#form_add_user' ).hide();
+		        	hideElement();
 		        	return false;
 		        },
 		        btn2:function( index, layero ){
+		        	hideElement();
 		        	layer.close( index );
+		        },
+		        end: function(){
+		        	hideElement();
 		        },
 		        success: function( layero, index ){
 		        	/*
@@ -139,17 +146,68 @@ $(function(){
 	    var data = obj.data;
 	    if(obj.event === 'detail'){
 	    	detail( data );
-	    } else if(obj.event === 'delete'){
-	    	layer.confirm('真的删除行么', function(index){
-	    		obj.del();
-	    		layer.close(index);
-	    	});
+	    } else if(obj.event === 'del'){
+	    	del( obj );	    	
 	    } else if(obj.event === 'save'){
-	    	layer.alert('编辑行：<br>'+ JSON.stringify(data))
+	    	save( obj );	   
 	    }
 	})
 	
+	/*
+	 * 保存按钮单击事件
+	 */
+	function save( obj ){
+		console.log( '--------保存按钮单击事件--------' );		
+		//保存
+		
+		var data = obj.data,
+			dataJson ={
+				"orgid": data.orgid,
+				"usernum": data.usernum,
+				"name": data.name || ""
+			};
+		console.log( dataJson );
+		ajax( 'put', modifyUserUrl, dataJson, modifyUserSF );
+	}
 	
+	/*
+	 * 保存按钮单击事件
+	 */
+	function modifyUserSF( data ){
+		console.log( '--------保存按钮单击事件|--------' );
+		//刷新页面
+		ajax( 'get', getUsersUrl + "/users", {}, getUsersSF, false );
+		layer.msg('保存用户成功', {icon:1});
+	}
+	
+	/*
+	 * 删除按钮单击事件
+	 */
+	function del( obj ){
+		console.log( '--------删除按钮单击事件--------' );
+		console.log( obj );
+		var data = obj.data;
+		console.log( data );
+		layer.confirm( '真的删除行么', function(index){			   		
+    		//后端删除
+    		var url = deleteUserUrl + "/" + data.usernum,
+    			deleteData = {
+    				"orgid" : data.orgid,
+    				"usernum" : data.usernum,
+    				"name" : data.name
+    			};
+    		console.log( url );
+    		ajax( 'delete', url, deleteData, function( data ){
+    			console.log( '--------请求删除用户成功回调函数--------' );
+    			//刷新页面
+    			//查询
+    			ajax( 'get', getUsersUrl + "/users", {}, getUsersSF, false );	
+    			layer.msg('删除成功', {icon:1});
+    		} );
+    		layer.close(index);
+    	});		
+	}
+
 	/*
 	 * 生成前台表格
 	 */
@@ -234,6 +292,7 @@ $(function(){
 	        	console.log( parentId );
 	        	if( parentId && parentId == currentOrganId ){
 	        		layer.close( index );
+	        		hideElement();
 	        		return;
 	        	}
 	        	
@@ -244,15 +303,18 @@ $(function(){
 	        			function changeParentSF( data ){
 	        				console.log( '-------------修改用户父id成功回调函数--------' );
 	        				layer.msg( '修改组织关系成功', {icon:6});
-	        				layer.close( index ); 
-	        				$('#userOrgan').hide();
+	        				layer.close( index );         				
 	        			}
 	        		);
+	        	hideElement();
 	        	//return false;
 	        },
 	        btn2: function(index, layero){
 	            layer.close(index);
-	            $('#userOrgan').hide();
+	            hideElement();
+	        },
+	        end: function(){
+	        	hideElement();
 	        },
 	        success: function( layero, index ){
 	        	console.log( '---------打开用户组织管理页面---------' );
@@ -276,7 +338,7 @@ $(function(){
 	        	        ,height:'80%'
 	        	        ,isFilter:false
 	        	        ,iconOpen:true//是否显示图标【默认显示】
-	        	        ,isOpenDefault:false//节点默认是展开还是折叠【默认展开】
+	        	        ,isOpenDefault:true//节点默认是展开还是折叠【默认展开】
 	        	        ,loading:true
 	        	        ,method:'get'
 	        	        ,isPage:false
@@ -308,6 +370,14 @@ $(function(){
 	        	});        	
 	        }
     	}) 
+	}
+	
+	/*
+	 * 用户组织关系单击事件
+	 */
+	function hideElement(){
+		$( '#userOrgan' ).hide();
+		$( '#form_add_user' ).hide();
 	}
 	
 	

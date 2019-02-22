@@ -26,6 +26,18 @@ import cn.soa.entity.UserOrganization;
  *
  */
 
+/**
+ * @ClassName: UserMapper
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author zhugang
+ * @date 2019年2月21日
+ */
+/**
+ * @ClassName: UserMapper
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author zhugang
+ * @date 2019年2月21日
+ */
 @Mapper
 public interface UserMapper {
 	
@@ -108,8 +120,7 @@ public interface UserMapper {
 	 * @Description: 根据用户id删除用户
 	 */
 	public int deleteUserById(@Param("userid") String userid);
-	
-	
+		
 	 /**   
 	  * @Title: deleteUserByUsernum   
 	  * @Description: 根据usernum删除用户       
@@ -124,5 +135,13 @@ public interface UserMapper {
 	 * @return: int        
 	 */  
 	public int saveUserBackId( UserOrganization u );
+	
+	
+	/**   
+	 * @Title: modifyUserById   
+	 * @Description:  根据id修改用户  
+	 * @return: int        
+	 */  
+	public int modifyUserById( @Param("userOrgan") UserOrganization userOrgan );
 
 }

@@ -133,17 +133,20 @@ public class UserMapperTest {
 //	}
 	
 	//修改用户
-	//@Test
-//	public void modifyUserById() {
-//		UserOrganization u2 = new UserOrganization(
-//				"小黑", 1, 3, "123456", 1, "dota");
-////		u2.setOrgid(13);
-////		int i = userMapper.modifyUserById(u2);
-////		System.out.println(i);
-//	}
-	
 	@Test
 	public void modifyUserById() {
+		UserOrganization u = new UserOrganization();
+		u.setOrgid("919B20B203E144CABF8B2C624A69C1A7");
+		u.setUsernum("11");
+		u.setName("后裔");
+		int i = userMapper.modifyUserById(u);
+		System.out.println(i);
+	}
+	
+	
+	
+	//@Test
+	public void modifyUserBynum() {
 		UserOrganization u = new UserOrganization();
 		u.setUsernum("11");
 		u.setParent_id("1");
@@ -163,7 +166,7 @@ public class UserMapperTest {
 	//根据usernum删除用户
 	//@Test
 	public void deleteUserByNum() {
-		String usernum = "11111";
+		String usernum = "test11";
 		int i = userMapper.deleteUserByUsernum(usernum);
 		System.out.println(i);		
 	}

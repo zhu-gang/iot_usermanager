@@ -2,7 +2,7 @@
  * 全局变量
  */
 var saveUrl = ipPort + '/user',
-	deleteUrl = ipPort + '/user',
+	deleteUrl = ipPort + '/user/organ',
 	putUrl = ipPort + '/userInfo/state',
 	registerUrl = ipPort + '/register/list',
 	saveUserInfoUrl = ipPort + '/user/userInfo',
@@ -309,7 +309,7 @@ function add(pObj) {
     var pdata=pObj?pObj.data:null;
     var param = {};
 //    param.orgid = Math.random()+'';
-    param.name = '新增'+Math.random();
+    param.name = Math.random()*1000000000;
     param.usernum = '请输入用户唯一编号';
     param.parent_id = pdata?pdata.usernum:null;
     param.remark1 = 0;

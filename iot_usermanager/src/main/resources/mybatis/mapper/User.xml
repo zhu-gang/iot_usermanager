@@ -205,7 +205,7 @@
 	
 	<!-- ===========================3、修改===============================  -->	
 	
-	<!-- 3.1、根据id修改用户信息 -->
+	<!-- 3.1、根据num修改用户信息 -->
 	<update id="modifyUserBynum" parameterType="cn.soa.entity.UserOrganization">
 		update iot_user_organization		
 		<trim prefix="set" suffix="where usernum = #{userOrgan.usernum}" suffixOverrides="," >
@@ -236,7 +236,39 @@
 		</trim>
 	</update>
 	
-
+	<!-- 3.2、根据id修改用户 -->
+	<update id="modifyUserById" parameterType="cn.soa.entity.UserOrganization">
+		update iot_user_organization		
+		<trim prefix="set" suffix="where orgid = #{userOrgan.orgid}" suffixOverrides="," >
+			<if test="userOrgan.usernum != null">
+				usernum = #{ userOrgan.usernum },
+			</if>
+			<if test="userOrgan.name != null">
+				name = #{ userOrgan.name },
+			</if>
+			<if test="userOrgan.parent_id != null">
+				parent_id = #{ userOrgan.parent_id },
+			</if>
+			<if test="userOrgan.user_password != null">
+				user_password = #{ userOrgan.user_password },
+			</if>
+			<if test="userOrgan.state != null">
+				state = #{ userOrgan.state },
+			</if>
+			<if test="userOrgan.note != null">
+				note = #{ userOrgan.note }, 
+			</if>
+			<if test="userOrgan.is_parent != null">
+				is_parent = #{ userOrgan.is_parent }, 
+			</if>
+			<if test="userOrgan.remark1 != null">
+				remark1 = #{ userOrgan.remark1 }, 
+			</if>
+			<if test="userOrgan.remark2 != null">
+				remark2 = #{ userOrgan.remark2 }
+			</if>
+		</trim>
+	</update>
 	
 	
 	

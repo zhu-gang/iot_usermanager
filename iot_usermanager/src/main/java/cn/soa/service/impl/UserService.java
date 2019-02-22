@@ -216,6 +216,27 @@ public class UserService implements UserServiceInter{
 	
 	/**   
 	 * @Title: deleteUserAndInfoByNum   
+	 * @Description: 根据usernum删除用户
+	 * @param: @return      
+	 * @return: int        
+	 */  
+	@Transactional
+	@Override
+	public int deleteUserByNum( String usernum ) {
+		/*
+		 * 删除用户
+		 */
+		int i = deleteUserByNumServ(usernum);
+		if( i < 0 ) {
+			return -1;
+		}else if( i == 0 ){
+			return 0;
+		}
+		return i;
+	}
+	
+	/**   
+	 * @Title: deleteUserAndInfoByNum   
 	 * @Description: 根据usernum删除用户和用户信息
 	 * @param: @return      
 	 * @return: int        
@@ -340,6 +361,7 @@ public class UserService implements UserServiceInter{
 				logger.debug( currentMap.toString() );
 				if( parentId != null && parentId.equals( u.getUsernum() ) ) {
 					currentMap.put( "lay_is_radio", true );
+					currentMap.put( "lay_is_open", true);
 				}
 				lists.add(currentMap);
 			}
@@ -368,5 +390,26 @@ public class UserService implements UserServiceInter{
 			e.printStackTrace();
 			return -1;
 		}
+	}
+	
+	/**   
+	 * @Title: modifyUserByIdServ   
+	 * @Description: 根据用户id修改用户信息  
+	 * @return: int        
+	 */ 
+	@Override
+	public int modifyUserByIdServ( String orgid, String usernum, String name  ) {
+		int i = -1;
+		try {
+			UserOrganization u = new UserOrganization();
+			u.setOrgid(orgid);
+			u.setUsernum(usernum);
+			u.setName(name);
+			i = userMapper.modifyUserById(u);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return i;
 	}
 }

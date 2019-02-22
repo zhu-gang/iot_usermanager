@@ -216,16 +216,37 @@ public class UserController {
 	@DeleteMapping("/{usernum}")
 	public ResultJson<String> deleteUserContro(@PathVariable("usernum") @NotBlank String usernum) {
 		logger.debug("-----C------- 删除用户   ---- usernum： " + usernum);
-		int i = userService.deleteUserAndInfoByNum(usernum);
+		int i = userService.deleteUserByNum(usernum);
 		if( i < 0 ) {
-			logger.debug("C---- 删除用户 或用户信息失败返回值 ---i---" + i);
+			logger.debug("C---- 删除用户 失败返回值 ---i---" + i);
 			return new ResultJson<String>(1, "未知错误，删除失败", i + "" );
 		}else if( i == 0) {
-			logger.debug("C---- 删除用户或用户信息失败返回值 ---i---" + i);
-			return new ResultJson<String>(1, "删除用户或用户信息失败 ，删除数据为0", i + "" );
+			logger.debug("C---- 删除用户失败返回值 ---i---" + i);
+			return new ResultJson<String>(1, "删除用户失败 ，删除数据为0", i + "" );
 		}else {
-			logger.debug("C---- 删除用户或用户信息成功返回值 ---i---" + i);
+			logger.debug("C---- 删除用户成功返回值 ---i---" + i);
 			return new ResultJson<String>(0, "删除用户成功", i + "" );
+		}
+	}
+	
+	/**   
+	 * @Title: deleteOrganContro   
+	 * @Description:   根据num删除组织   
+	 * @return: ResultJson<String>        
+	 */  
+	@DeleteMapping("/organ/{num}")
+	public ResultJson<String> deleteOrganContro(@PathVariable("num") @NotBlank String num) {
+		logger.debug("-----C------- 删除组织   ---- num： " + num);
+		int i = userService.deleteUserByNum(num);
+		if( i < 0 ) {
+			logger.debug("C---- 删除组织失败返回值 ---i---" + i);
+			return new ResultJson<String>(1, "未知错误，删除失败", i + "" );
+		}else if( i == 0) {
+			logger.debug("C---- 删除组织失败返回值 ---i---" + i);
+			return new ResultJson<String>(1, "删除组织失败 ，删除数据为0", i + "" );
+		}else {
+			logger.debug("C---- 删除组织成功返回值 ---i---" + i);
+			return new ResultJson<String>(0, "删除组织成功", i + "" );
 		}
 	}
 	
@@ -357,6 +378,27 @@ public class UserController {
 			return new ResultJson<String>( 0, "修改成功 ", i + "" );
 		}else {
 			logger.debug("-----C------- 修改usernum用户 的parentid失败 ----  " + i);
+			return new ResultJson<String>( 0, "修改失败 ", "" );
+		}
+	}
+	
+	/**   
+	 * @Title: modifyUserById   
+	 * @Description: 根据用户id修改用户信息   
+	 * @return: ResultJson<String>        
+	 */ 
+	@PutMapping("/user")
+	public ResultJson<String> modifyUserById(
+			@RequestParam("orgid") @NotBlank String orgid,
+			@RequestParam("usernum") @NotBlank String usernum,
+			@RequestParam("name") @NotBlank String name){
+		logger.debug( "--C---------- 根据用户id修改用户信息  -----------" );
+		int i = userService.modifyUserByIdServ(orgid, usernum, name);
+		if( i > 0 ) {
+			logger.debug("-----C------- 根据用户id修改用户信息   成功  ----  " + i);
+			return new ResultJson<String>( 0, "修改成功 ", i + "" );
+		}else {
+			logger.debug("-----C------- 根据用户id修改用户信息   失败 ----  " + i);
 			return new ResultJson<String>( 0, "修改失败 ", "" );
 		}
 	}

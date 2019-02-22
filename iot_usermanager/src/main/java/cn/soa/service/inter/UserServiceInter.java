@@ -152,7 +152,23 @@ public interface UserServiceInter {
 	 * @Description: 修改usernum用户 的parentid  
 	 * @return: int        
 	 */  
-	int modifyUserParentidServ(String usernum, String parentId);		
+	int modifyUserParentidServ(String usernum, String parentId);
+
+
+	/**   
+	 * @Title: modifyUserByIdServ   
+	 * @Description: 根据用户id修改用户信息    
+	 * @return: int        
+	 */  
+	int modifyUserByIdServ(String orgid, String usernum, String name);
+
+
+	/**   
+	 * @Title: deleteUserByNum   
+	 * @Description:根据usernum删除用户   
+	 * @return: int        
+	 */  
+	int deleteUserByNum(String usernum);		
 
 
 }
