@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -119,7 +120,6 @@ public class RoleAuthorityControl {
 	public ResultJson<Integer> changeToAuthority(
 			@RequestParam(value = "rolids[]", required = false) ArrayList<String> rolids, String authorityId) {
 
-		System.out.println(rolids);
 		Integer result = authorityService.changeToAuthority(rolids, authorityId);
 
 		ResultJson<Integer> reObj = new ResultJson<Integer>(0, "修改角色权限成功", result);

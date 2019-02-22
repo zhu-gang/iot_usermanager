@@ -392,7 +392,7 @@ layui.config({
 							$.ajax({
 										url : '/roleAuthority/changeToAuthority',
 										dataType : 'json',
-										type:'post',
+										type : 'post',
 										data : {
 											rolids : select_roleIds,
 											authorityId : obj.data.autid
