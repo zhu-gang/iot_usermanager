@@ -110,20 +110,20 @@ layui.use('element', function(){
 			}
 		} )
 	}
-	element.init();
+	
   
 	
 	var jsonObj = [
-		{"name":"t11","id":"11","pid":"1","order":"3"},
-		{"name":"t12","id":"12","pid":"1","order":"2"},
-		{"name":"t13","id":"13","pid":"1","order":"1"},
-		{"name":"t21","id":"21","pid":"2","order":"1"},
-		{"name":"t2","id":"2","pid":"","order":"2"},
-		{"name":"t1","id":"1","pid":"","order":"5"},
-		{"name":"t111","id":"111","pid":"11","order":"4"},
-		{"name":"t112","id":"112","pid":"11","order":"3"},
-		{"name":"t3","id":"3","pid":"","order":"2"},
-		{"name":"t4","id":"4","pid":"","order":"1"}		
+		{"name":"t11","modId":"11","parentId":"1","remark1":"3"},
+		{"name":"t12","modId":"12","parentId":"1","remark1":"2"},
+		{"name":"t13","modId":"13","parentId":"1","remark1":"1"},
+		{"name":"t21","modId":"21","parentId":"2","remark1":"1"},
+		{"name":"t2","modId":"2","parentId":"","remark1":"3"},
+		{"name":"t1","modId":"1","parentId":"","remark1":"5"},
+		{"name":"t111","modId":"111","parentId":"11","remark1":"4"},
+		{"name":"t112","modId":"112","parentId":"11","remark1":"3"},
+		{"name":"t3","modId":"3","parentId":"","remark1":"2"},
+		{"name":"t4","modId":"4","parentId":"","remark1":"1"}		
 	]
 	
 	var dataArr = sortForTree( jsonObj );
@@ -148,13 +148,34 @@ layui.use('element', function(){
 	 * 根据json数组，生成无限极tree结构核心算法
 	 * jsonObj为原json数组，suthSet为去重pid后的json数组
 	 */
-	function generateTree( jsonObj, suthSet ){
+	function generateTree( jsonObj, unsortResult ){	
+		var suthSet = [];
+		//排序
+		for( var i = 0; i < unsortResult.length; i++ ){
+			if( i == 0 ){
+				suthSet.push( unsortResult[i] );
+				continue;
+			}
+			console.log(suthSet.length);
+			for( var j = 0; j < suthSet.length; j++ ){
+				if( suthSet[j].remark1 > unsortResult[i].remark1  ){
+					suthSet.splice( j, 0, unsortResult[i] );
+					break;
+				}
+				if( j == suthSet.length - 1){
+					suthSet.push( unsortResult[i] );
+					break;
+				}
+			}
+		}
+		
+		//构造无限极tree
 		var result = [];
 		for( var i = 0; i < suthSet.length; i++ ){	
 			var tempSet = [];//放pid			
-			var json = { "name":suthSet[i].name, "child":"" };			
+			var json = { "name":suthSet[i].name, "child":"", "remark1":suthSet[i].remark1 };			
 			for( var j = 0; j < jsonObj.length; j++ ){
-				if( jsonObj[j].pid == suthSet[i].id ){
+				if( jsonObj[j].parentId == suthSet[i].modId ){
 					tempSet.push( jsonObj[j] );			
 				}					
 			}
@@ -162,9 +183,10 @@ layui.use('element', function(){
 				var tempArr = generateTree( jsonObj, tempSet );
 				json.child = tempArr;
 			}
-			result.push( json );
-			
+			result.push( json );			
 		}
+		
+
 		return result;
 	}
 	
@@ -173,15 +195,17 @@ layui.use('element', function(){
 	 */
 	function distinct( elem ){
 		for(var i= 0; i< jsonObj.length; i++){
-			if( jsonObj[i].id == elem.pid ){
+			if( jsonObj[i].modId == elem.parentId ){
 				return false;
 			}		
 		}
 		return true;
 	}
 	
-  //监听导航点击
-  element.on('nav(demo)', function(elem){
+	element.init();
+	
+	//监听导航点击
+	element.on('nav(demo)', function(elem){
     //console.log(elem)
     layer.msg(elem.text());
   });

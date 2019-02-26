@@ -5,37 +5,12 @@
 var element = layui.element,
 	layer = layui.layer,
 	logoutUrl = ipPort + "/user/logout",	
-	roleAuthUrl = ipPort + "/user/role/auths",	
+	roleAuthUrl = ipPort + "/user/role/auths",
+	roleAuthJsonUrl = ipPort + "/user/auths",
 	username;
 //菜单配置
-var menoArr;
-//= [
-//	{
-//		"id" : "1", 
-//		"first" : "首页", 
-//		"second" : "快捷导航1,快捷导航2,快捷导航3",
-//		"url": ""		 
-//	},
-//	{
-//		"id" : "2", 
-//		"first" : "设备管理", 
-//		"second" : "设备管理1,设备管理2,设备管理3,设备管理4",
-//		"url":""
-//	},
-//	{
-//		"id" : "3", 
-//		"first" : "用户模块", 
-//		"second" : "用户管理,菜单管理,角色管理,权限管理,系统通知",
-//		"url":"/html/userCenter/userManager.html,/html/userCenter/resource_list.html,/html/userCenter/roleManager.html,/html/userCenter/authority_list.html,/html/userCenter/notice.html"		 
-//	},
-//	{
-//		"id" : "4", 
-//		"first" : "其他", 
-//		"second" : "其他1,其他2",
-//		"url":""		 
-//	}
-//]
-//	
+var menoArr,authArr;
+
 /**
  * 初始化加载
  * @type 
@@ -44,7 +19,7 @@ $(function(){
 	/*
 	 * 初始化菜单权限
 	 */
-	ajax( 'get', roleAuthUrl, {}, getAuthsSF, false );
+	ajax( 'get', roleAuthJsonUrl, {}, getAuthsSF, false );
 	
 	/*
 	 * 初始化菜单权限请求成功回调函数
@@ -52,407 +27,34 @@ $(function(){
 	function getAuthsSF( data ){
 		console.log( '-------初始化菜单权限请求成功回调函数---------');
 		console.log( data );		
-		menoArr = data
+		menoArr = data;
 	}
 	
-	/*
-	 * 初始化echart图
-	 */
-	// 基于准备好的dom，初始化echarts实例
-//	var chart1 = echarts.init( $('#index_ehart_one')[0] );
-//	var chart2 = echarts.init( $('#index_ehart_two')[0] );
-//	var chart3 = echarts.init( $('#index_ehart_three')[0] );
-//	var chart4 = echarts.init( $('#index_ehart_four')[0] );
-//	var chart5 = echarts.init( $('#index_ehart_five')[0] );
-//	var chart6 = echarts.init( $('#index_ehart_six')[0] );
-//
-//    // 指定图表的配置项和数据
-//    var option1 = {
-//    		backgroundColor: '#0B2967',
-//    		title: {
-//    	        text: '设备异常数量',
-//    	        bottom: '0',
-//    	        left: 'center',
-//    	        textStyle: {
-//    	        	color: '#B2FCFB',
-//    	        },
-//    	    },
-//    	    tooltip: {
-//    	        trigger: 'item',
-//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
-//    	    }, 
-//    	    series: [    	        
-//    	    	{
-//    	            name:'访问来源',
-//    	            type:'pie',
-//    	            radius: ['45%', '65%'],
-//    	            avoidLabelOverlap: false,
-//    	            label: {
-//    	                show: false,
-//    	                position: 'center',
-//    	                normal: {
-//    	                    show: false,
-//    	                    position: 'center'
-//    	                },
-//    	                emphasis: {
-//    	                    show: false,
-//    	                    textStyle: {
-//    	                        fontSize: '10',
-//    	                        fontWeight: 'bold'
-//    	                    }
-//    	                }
-//    	            },
-//    	            labelLine: {
-//    	                normal: {
-//    	                    show: false
-//    	                }
-//    	            },
-//    	            data:[
-//    	            	{value:335, name:'32.3%',
-//    	                    label: {
-//    	                        show: true,
-//    	                        position: 'center',
-//    	                        fontSize: 22,
-//    	                        color: '#14EE3B',
-//    	                        fontWeight:'bold',
-//    	                    }
-//    	                },
-//    	                {value:110, name:'4',
-//    	                    label: {
-//    	                        show: false
-//    	                    }}
-//    	            ],
-//    	            color:['#03CDFD','#3595F5'],
-//    	        },
-//    	    ]
-//    	};
-//    
-//    var option2 = {
-//    		backgroundColor: '#0B2967',
-//    		title: {
-//    	        text: '设备异常数量',
-//    	        bottom: '0',
-//    	        left: 'center',
-//    	        textStyle: {
-//    	        	color: '#B2FCFB',
-//    	        },
-//    	    },
-//    	    tooltip: {
-//    	        trigger: 'item',
-//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
-//    	    },
-//    	    series: [
-//    	    	{
-//    	            name:'访问来源',
-//    	            type:'pie',
-//    	            radius: ['45%', '65%'],
-//    	            avoidLabelOverlap: false,
-//    	            label: {
-//    	                show: false,
-//    	                position: 'center',
-//    	                normal: {
-//    	                    show: false,
-//    	                    position: 'center'
-//    	                },
-//    	                emphasis: {
-//    	                    show: false,
-//    	                    textStyle: {
-//    	                        fontSize: '10',
-//    	                        fontWeight: 'bold'
-//    	                    }
-//    	                }
-//    	            },
-//    	            labelLine: {
-//    	                normal: {
-//    	                    show: false
-//    	                }
-//    	            },
-//    	            data:[
-//    	            	{value:335, name:'32.3%',
-//    	                    label: {
-//    	                        show: true,
-//    	                        position: 'center',
-//    	                        fontSize: 22,
-//    	                        color: '#14EE3B',
-//    	                        fontWeight:'bold',
-//    	                    }
-//    	                },
-//    	                {value:110, name:'4',
-//    	                    label: {
-//    	                        show: false
-//    	                    }}
-//    	            ],
-//    	            color:['#03CDFD','#3595F5'],
-//    	        },
-//    	    ]
-//    	};
-//    
-//    var option3 = {
-//    		backgroundColor: '#0B2967',
-//    		title: {
-//    	        text: '设备异常数量',
-//    	        bottom: '0',
-//    	        left: 'center',
-//    	        textStyle: {
-//    	        	color: '#B2FCFB',
-//    	        },
-//    	    },
-//    	    tooltip: {
-//    	        trigger: 'item',
-//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
-//    	    },
-//    	    series: [
-//    	    	{
-//    	            name:'访问来源',
-//    	            type:'pie',
-//    	            radius: ['45%', '65%'],
-//    	            avoidLabelOverlap: false,
-//    	            label: {
-//    	                show: false,
-//    	                position: 'center',
-//    	                normal: {
-//    	                    show: false,
-//    	                    position: 'center'
-//    	                },
-//    	                emphasis: {
-//    	                    show: false,
-//    	                    textStyle: {
-//    	                        fontSize: '10',
-//    	                        fontWeight: 'bold'
-//    	                    }
-//    	                }
-//    	            },
-//    	            labelLine: {
-//    	                normal: {
-//    	                    show: false
-//    	                }
-//    	            },
-//    	            data:[
-//    	            	{value:335, name:'32.3%',
-//    	                    label: {
-//    	                        show: true,
-//    	                        position: 'center',
-//    	                        fontSize: 22,
-//    	                        color: '#14EE3B',
-//    	                        fontWeight:'bold',
-//    	                    }
-//    	                },
-//    	                {value:110, name:'4',
-//    	                    label: {
-//    	                        show: false
-//    	                    }}
-//    	            ],
-//    	            color:['#03CDFD','#3595F5'],
-//    	        },
-//    	    ]
-//    	};
-//    
-//    var option4 = {
-//    		backgroundColor: '#0B2967',
-//    		title: {
-//    	        text: '设备异常数量',
-//    	        bottom: '0',
-//    	        left: 'center',
-//    	        textStyle: {
-//    	        	color: '#B2FCFB',
-//    	        },
-//    	    },
-//    	    tooltip: {
-//    	        trigger: 'item',
-//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
-//    	    },
-//    	    series: [
-//    	    	{
-//    	            name:'访问来源',
-//    	            type:'pie',
-//    	            radius: ['45%', '65%'],
-//    	            avoidLabelOverlap: false,
-//    	            label: {
-//    	                show: false,
-//    	                position: 'center',
-//    	                normal: {
-//    	                    show: false,
-//    	                    position: 'center'
-//    	                },
-//    	                emphasis: {
-//    	                    show: false,
-//    	                    textStyle: {
-//    	                        fontSize: '10',
-//    	                        fontWeight: 'bold'
-//    	                    }
-//    	                }
-//    	            },
-//    	            labelLine: {
-//    	                normal: {
-//    	                    show: false
-//    	                }
-//    	            },
-//    	            data:[
-//    	            	{value:335, name:'32.3%',
-//    	                    label: {
-//    	                        show: true,
-//    	                        position: 'center',
-//    	                        fontSize: 22,
-//    	                        color: '#14EE3B',
-//    	                        fontWeight:'bold',
-//    	                    }
-//    	                },
-//    	                {value:110, name:'4',
-//    	                    label: {
-//    	                        show: false
-//    	                    }}
-//    	            ],
-//    	            color:['#03CDFD','#3595F5'],
-//    	        },
-//    	    ]
-//    	};
-//    
-//    var option5 = {
-//    		backgroundColor: '#0B2967',
-//    		title: {
-//    	        text: '设备异常数量',
-//    	        bottom: '0',
-//    	        left: 'center',
-//    	        textStyle: {
-//    	        	color: '#B2FCFB',
-//    	        },
-//    	    },
-//    	    tooltip: {
-//    	        trigger: 'item',
-//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
-//    	    },
-//    	   
-//    	    series: [
-//    	    	{
-//    	            name:'访问来源',
-//    	            type:'pie',
-//    	            radius: ['45%', '65%'],
-//    	            avoidLabelOverlap: false,
-//    	            label: {
-//    	                show: false,
-//    	                position: 'center',
-//    	                normal: {
-//    	                    show: false,
-//    	                    position: 'center'
-//    	                },
-//    	                emphasis: {
-//    	                    show: false,
-//    	                    textStyle: {
-//    	                        fontSize: '10',
-//    	                        fontWeight: 'bold'
-//    	                    }
-//    	                }
-//    	            },
-//    	            labelLine: {
-//    	                normal: {
-//    	                    show: false
-//    	                }
-//    	            },
-//    	            data:[
-//    	            	{value:335, name:'32.3%',
-//    	                    label: {
-//    	                        show: true,
-//    	                        position: 'center',
-//    	                        fontSize: 22,
-//    	                        color: '#14EE3B',
-//    	                        fontWeight:'bold',
-//    	                    }
-//    	                },
-//    	                {value:110, name:'4',
-//    	                    label: {
-//    	                        show: false
-//    	                    }}
-//    	            ],
-//    	            color:['#03CDFD','#3595F5'],
-//    	        },
-//    	    ]
-//    	};
-//    
-//    var option6 = {
-//    		backgroundColor: '#0B2967',
-//    		title: {
-//    	        text: '设备异常数量',
-//    	        bottom: '0',
-//    	        left: 'center',
-//    	        textStyle: {
-//    	        	color: '#B2FCFB',
-//    	        },
-//    	    },
-//    	    tooltip: {
-//    	        trigger: 'item',
-//    	        formatter: "{a} <br/>{b}: {c} ({d}%)"
-//    	    },
-//    	    series: [
-//    	    	{
-//    	            name:'访问来源',
-//    	            type:'pie',
-//    	            radius: ['45%', '65%'],
-//    	            avoidLabelOverlap: false,
-//    	            label: {
-//    	                show: false,
-//    	                position: 'center',
-//    	                normal: {
-//    	                    show: false,
-//    	                    position: 'center'
-//    	                },
-//    	                emphasis: {
-//    	                    show: false,
-//    	                    textStyle: {
-//    	                        fontSize: '10',
-//    	                        fontWeight: 'bold'
-//    	                    }
-//    	                }
-//    	            },
-//    	            labelLine: {
-//    	                normal: {
-//    	                    show: false
-//    	                }
-//    	            },
-//    	            data:[
-//    	            	{value:335, name:'32.3%',
-//    	                    label: {
-//    	                        show: true,
-//    	                        position: 'center',
-//    	                        fontSize: 22,
-//    	                        color: '#14EE3B',
-//    	                        fontWeight:'bold',
-//    	                    }
-//    	                },
-//    	                {value:110, name:'4',
-//    	                    label: {
-//    	                        show: false
-//    	                    }}
-//    	            ],
-//    	            color:['#03CDFD','#3595F5'],
-//    	        },
-//    	    ]
-//    	};
-//    // 使用刚指定的配置项和数据显示图表。
-//    chart1.setOption( option1 );
-//    chart2.setOption( option2 );
-//    chart3.setOption( option3 );
-//    chart4.setOption( option4 );
-//    chart5.setOption( option5 );
-//    chart6.setOption( option6 );
 	
 	/*
-	 * 初始化加载一级菜单
+	 * 初始化菜单
 	 */
-	$.grep( menoArr, function( item, index ){
-		$('#firstMeno').append(
-			'<li class="layui-nav-item" id=' + item.id + '>' +
-				'<a href="javaScript:;">' +
-					$.trim(item.first) + 
-				 '</a>'+
-			'</li>'		
-		);
-	})	
-	element.init(); 
+	if( menoArr ){
+		//对象
+		authArr  = sortForTree( menoArr );
+		
+		/*
+		 * 加载第一级菜单
+		 */
+		$.each( authArr, function( index, item ){
+			$( '#firstMeno' ).append(
+				'<li class="layui-nav-item" id=' + item.id + '>' +
+					'<a href="javaScript:;">' +
+						$.trim(item.name) + 
+					'</a>' +
+				'</li>'		
+			);
+		})		
+		
+		element.init(); 
+	}		
 	
 	
-	/*
-	 * 初始化加载二级菜单
-	 */
 	
 	/*
 	 * 加载用户名
@@ -529,24 +131,26 @@ function menoCallBack(){
 	console.log( '----------菜单栏单击事件----------');	
 //	console.log( $(this) );	
 	//获取二级子菜单
-	var secondMeno = $(this).attr('id');
-	console.log( secondMeno );	
-	$secondMeno = $('#secondMeno');
-	$secondMeno.empty();
-	$.grep( menoArr, function( item, index ){
-		if( $.trim(item.id) == $.trim(secondMeno) ){
-			var secondMenoArr = item.second.split(',');
-			var secondMenoUrl = item.url.split(',');
-			$.map( secondMenoArr, function( item1, index ){
-				$secondMeno.append(
-					'<li class="layui-nav-item layui-nav-itemed" '+ 
-							' url=' + secondMenoUrl[index] + ' onclick="navClickBack(this);">' + 
-				     	'<a class="" href="javascript:;">' + secondMenoArr[index] + '</a>' +
-			        '</li>');
-			})	
+	var secondMenoId = $(this).attr('id');
+	console.log( secondMenoId );	
+	
+	//获取所有子菜单[]
+	var sonMeno;
+	$.grep( authArr, function( item, index ){
+		if( $.trim(item.id) == $.trim( secondMenoId ) ){
+			sonMeno = item.child;
 		}
-	})	
-	element.init(); 
+	})
+	console.log( sonMeno );	
+	
+	//加载子菜单
+	if( sonMeno ){
+		$secondMeno = $('#secondMeno');
+		$secondMeno.empty();
+		generateF( $secondMeno, sonMeno );
+		element.init(); 
+	}	
+	
 	return false;
 }
 
@@ -625,3 +229,133 @@ $(function(){
 		console.log("--------------关闭ws服务--------------");
 	}	
 })
+
+
+/*
+ * 生成无限极layui-Nav第一步
+ * $obj为ul标签对应的jquery对象, data为无限极的tree数据结构
+ */
+function generateF( $obj, data ){
+	$.each( data, function(index,item){
+	  	var html ='<li class="layui-nav-item "' + 
+	  					' url=' + item.url + ' onclick="navClickBack(this);">' + 
+					'<a href="javascript:;">'+ item.name + '</a>'
+				'</li>';
+		$this = $(html);
+		$obj.append($this);
+		if(item.child){
+			$this.append('<dl class="layui-nav-child"></dl>' );
+			$this =  $this.find('dl');
+			$.each( item.child, function(index1,item1){				
+				if(item1.child){
+					$this.append('<dd></dd>');
+					generateT( $this.find('dd:last'), item1.child, item1.name);
+				}else{
+					$this.append('<dd><a href="javascript:;">'+item1.name+'</a></dd>');
+				}
+			})
+		}
+	})
+}
+
+/*
+ * 生成无限极layui-Nav第二步
+ */
+function generateT( $obj, data, name ){
+	var html ='<li class="layui-nav-item">' + 
+				'<a href="javascript:;">'+ name + '</a>' +
+			    '<dl class="layui-nav-child">' +
+			    '</dl>' +
+			'</li>';
+	$this = $(html);
+	$obj.append($this);
+	$.each( data, function(index,item){
+		if(item.child){
+			generateT( $this.find('dd:last'), item.child, item.name);
+		}else{
+			$this.find('dl').append('<dd><a href="javascript:;">'+item.name+'</a></dd>');
+		}
+	} )
+}
+
+/*
+ * 根据json数组，生成无限极tree结构
+ */
+function sortForTree( jsonObj ){
+	/*
+	 * 找顶级
+	 */
+	var suthSet = jsonObj.filter( distinct );
+	//console.log(suthSet);
+	
+	/*
+	 * 生成指定结构	 
+	 */			
+	var arr = generateTree( jsonObj, suthSet);
+	
+	/* 
+	 * 加载 
+	 */
+	console.log( arr );
+	return arr;
+}
+
+
+/*
+ * 根据json数组，生成无限极tree结构核心算法
+ * jsonObj为原json数组，suthSet为去重pid后的json数组
+ */
+function generateTree( jsonObj, unsortResult ){	
+	var suthSet = [];
+	//排序
+	for( var i = 0; i < unsortResult.length; i++ ){
+		if( i == 0 ){
+			suthSet.push( unsortResult[i] );
+			continue;
+		}
+		console.log(suthSet.length);
+		for( var j = 0; j < suthSet.length; j++ ){
+			if( suthSet[j].remark1 > unsortResult[i].remark1  ){
+				suthSet.splice( j, 0, unsortResult[i] );
+				break;
+			}
+			if( j == suthSet.length - 1){
+				suthSet.push( unsortResult[i] );
+				break;
+			}
+		}
+	}
+	
+	//构造无限极tree
+	var result = [];
+	for( var i = 0; i < suthSet.length; i++ ){	
+		var tempSet = [];//放pid			
+		var json = { "name":suthSet[i].name, "child":"", 
+					 "remark1":suthSet[i].remark1, "url":suthSet[i].url,
+					 "id": suthSet[i].modId
+				};			
+		for( var j = 0; j < jsonObj.length; j++ ){
+			if( jsonObj[j].parentId == suthSet[i].modId ){
+				tempSet.push( jsonObj[j] );			
+			}					
+		}
+		if( tempSet.length > 0){
+			var tempArr = generateTree( jsonObj, tempSet );
+			json.child = tempArr;
+		}
+		result.push( json );			
+	}
+	return result;
+}
+
+/*
+ * 数组去重回调函数
+ */
+function distinct( elem ){
+	for(var i= 0; i< menoArr.length; i++){
+		if( menoArr[i].modId == elem.parentId ){
+			return false;
+		}		
+	}
+	return true;
+}	
