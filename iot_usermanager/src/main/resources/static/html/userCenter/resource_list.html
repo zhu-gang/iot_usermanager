@@ -69,7 +69,7 @@ input:focus {
 			<div class="layui-form-item">
 				<label class="layui-form-label">父级资源</label>
 				<div class="layui-input-inline">
-					<select name="parent_resource" required id="parent_resource"
+					<select name="parent_resource" required id="parent_resource" lay-search
 						lay-filter="parent_resource">
 					</select>
 				</div>
@@ -92,6 +92,17 @@ input:focus {
 						class="layui-input">
 				</div>
 			</div>
+			
+			<div class="layui-form-item">
+				<label class="layui-form-label">排序</label>
+				<div class="layui-input-inline">
+					<input type="text" name="resource_sort" id="resource_sort"
+						lay-verify="resource_sort" autocomplete="off" placeholder="请输入"
+						class="layui-input">
+				</div>
+			</div>
+			
+			
 			<div class="layui-form-item">
 				<label class="layui-form-label">资源描述</label>
 				<div class="layui-input-inline">

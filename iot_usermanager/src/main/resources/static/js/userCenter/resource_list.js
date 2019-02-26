@@ -25,9 +25,7 @@ layui.config({
 					elem : '#resource_table',
 					url : '/resource/getAllResourceInfo',
 					page : false,
-					cols : [[/*
-								 * { type : 'numbers' },
-								 */{
+					cols : [[{
 								field : 'modId',
 								title : 'id',
 								hide : true
@@ -60,6 +58,7 @@ layui.config({
 						layer.closeAll('loading');
 					}
 				});
+
 	}
 	$('#btn-expand').click(function() {
 				treetable.expandAll('#resource_table');
@@ -111,6 +110,7 @@ layui.config({
 		$("#parent_resource option").remove();
 		$("#resource_name").val(null);
 		$("#resource_url").val(null);
+		$("#resource_sort").val(null);
 		$("#resource_desc").val(null);
 		$("#btn_update").css("display", "none");
 		$("#btn_commit").css("display", "inline");
@@ -120,10 +120,10 @@ layui.config({
 					area : ['30%', '60%'], // 宽高
 					type : 1,
 					content : $('#resource_add'),
-					success:function(layero){
-					     var mask = $(".layui-layer-shade");
-					     mask.appendTo(layero.parent());
-					     //其中：layero是弹层的DOM对象
+					success : function(layero) {
+						var mask = $(".layui-layer-shade");
+						mask.appendTo(layero.parent());
+						// 其中：layero是弹层的DOM对象
 					}
 				});
 		$.ajax({
@@ -150,16 +150,16 @@ layui.config({
 
 	});
 
-	
-	//监听更新数据按钮点击事件
+	// 监听更新数据按钮点击事件
 	form.on('submit(btn_update)', function(data) {
-		// 获取数据
+				// 获取数据
 				var resource_name = $("#resource_name").val();// 资源名称
 				var parent_resource = $("#parent_resource").val();// 父级资源id
 				var is_parent = $("#is_parent").val();// 是否为父级
 				var resource_url = $("#resource_url").val();// 资源url
 				var resource_desc = $("#resource_desc").val();// 资源描述
 				var mod_id = $("#mod_id").val();
+				var resource_sort = $("#resource_sort").val();//排序字段
 
 				var fdata = {
 					name : resource_name,
@@ -167,9 +167,10 @@ layui.config({
 					isParent : is_parent,
 					url : resource_url,
 					describe : resource_desc,
-					modId:mod_id
+					modId : mod_id,
+					remark1 : resource_sort
 				};
-				
+
 				layer.close(add_layer);
 				$.ajax({
 							url : '/resource/updateResource',
@@ -189,7 +190,7 @@ layui.config({
 							}
 						});
 				return false;
-		
+
 			});
 	// 监听提交按钮点击事件
 	form.on('submit(btn_commit)', function(data) {
@@ -200,13 +201,15 @@ layui.config({
 				var is_parent = $("#is_parent").val();// 是否为父级
 				var resource_url = $("#resource_url").val();// 资源url
 				var resource_desc = $("#resource_desc").val();// 资源描述
+				var resource_sort = $("#resource_sort").val();//排序字段
 
 				var fdata = {
 					name : resource_name,
 					parentId : parent_resource,
 					isParent : is_parent,
 					url : resource_url,
-					describe : resource_desc
+					describe : resource_desc,
+					remark1 : resource_sort
 				};
 
 				layer.close(add_layer);
@@ -294,21 +297,20 @@ layui.config({
 
 			$("#mod_id").val(obj.data.modId);
 			$("#resource_name").val(obj.data.name);
-		    $("#is_parent").val(obj.data.isParent);
+			$("#is_parent").val(obj.data.isParent);
 			$("#resource_url").val(obj.data.url);
 			$("#resource_desc").val(obj.data.describe);
-			
-			
+			$("#resource_sort").val(obj.data.remark1);
 
 			add_layer = layer.open({
 						title : '资源编辑',
 						area : ['30%', '60%'], // 宽高
 						type : 1,
 						content : $('#resource_add'),
-						success:function(layero){
-						     var mask = $(".layui-layer-shade");
-						     mask.appendTo(layero.parent());
-						     //其中：layero是弹层的DOM对象
+						success : function(layero) {
+							var mask = $(".layui-layer-shade");
+							mask.appendTo(layero.parent());
+							// 其中：layero是弹层的DOM对象
 						}
 					});
 			$.ajax({
