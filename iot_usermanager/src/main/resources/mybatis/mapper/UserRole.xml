@@ -14,9 +14,9 @@
 	<select id="queryAllroles" resultType="cn.soa.entity.UserRole" >
 		select <include refid="userRoleFiled"> </include> from 
 		(select ROWNUM num, role.* from  iot_user_role role order by rolid) a 
-		<if test="first != 0  and last!= 0  ">	
+		<if test="first >= 0  and last!= 0  ">	
   	   where <![CDATA[ 
-        num >#{pagefirst} and num<=#{last}
+        num >#{first} and num<=#{last}
      ]]>  
      </if>
 	</select>
@@ -65,7 +65,7 @@
 	</select>
 	<!-- 查询出组织机构信息 -->
 	<select id="queryUsersByRold" resultType="cn.soa.entity.UserOrganization" parameterType="string">
-			select org.orgid,org.name,org.is_parent,org.usernum,org.parent_id from IOT_USER_USER_ROLE  ur left join IOT_USER_ORGANIZATION org  on ur.USERID=org.ORGID
+			select org.orgid,org.name,org.is_parent,org.usernum,org.parent_id from IOT_USER_USER_ROLE  ur left join IOT_USER_ORGANIZATION org  on ur.USERID=org.usernum
 			where ur.ROLID=#{ROLID}
 	</select>
 	

@@ -1,18 +1,20 @@
 $(function(){
 	var table = layui.table,
 	layer=layui.layer,
+	laypage = layui.laypage
 	form=layui.form,
 	element=layui.element;
 	table.render({
 		toolbar: '#toolbarDemo'
 	    ,elem: '#role'
-	    ,url:'/role/roles'
+	    ,url:'/role/roles/'
 	    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
 	    ,loading:true
 	    ,page:true
 	    ,cols: [[
 	      {type:'checkbox'}
-	      ,{field:'rolid', title: '角色id'}
+	      ,{type:'numbers'}
+	      ,{field:'rolid', title: '角色id',hide:true}
 	      ,{field:'name', title: '角色名称'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
 	      ,{field:'state', title: '状态',templet: '#titleTpl'}
 	      ,{field:'create_time', title: '创建时间', sort: true}
@@ -36,29 +38,31 @@ $(function(){
 					     var mask = $(".layui-layer-shade");
 					     mask.appendTo(layero.parent());
 					     //其中：layero是弹层的DOM对象
+					     element.init();
+					     form.render(); 
 					}
 				 });
 			}
 	}
 	//监听表单提交事件
-	$('.layui-btn-submit').click(function(){
+	
+	form.on('submit(formSubmit)', function(data){
 		$.ajax({
 			url:'/role/addOrUpdateRole',
 			data:$('.role-form').serialize() ,
 			dataType:'json',
 			success:function(data){
-		    	  if(data.state==0){
-		    		  layer.msg("操作角色成功",{icon:6});
-		    		  layer.closeAll();
-		    		  //重新刷新页面
-		    		  table.reload('role',{});
-		    	  };
+				  $(".layui-laypage-btn")[0].click(); 
+				  layer.closeAll();
+				  $('#popUpdateTest').hide();
 			},
 			error:function(){
 				 layer.msg("角色管理异常");
 			}
 		});
-	});
+		return false;
+	})
+
 	//监听表格头部工具栏事件
 	 $('.layui-btn-container>.add').click(function(){
 		 toolbarAction.openLayer();
@@ -92,7 +96,6 @@ $(function(){
 	 $('.layui-btn-container>.delete').click(function(){
 		 var checkStatus = table.checkStatus('role')
 			,data = checkStatus.data;
-		 console.log(data);
 		 if(data.length<1){
 			 layer.msg("请选中一条数据",{icon:5});
 		 }else{
@@ -103,14 +106,15 @@ $(function(){
 					ids[i]=data[i].rolid;
 				}
 				var ids_string=ids.join(",")
-				console.log(ids_string);
 				$.ajax({
 					url:'/role/deleteRoles',
 					data:{ids:ids_string},
 					dataType:'json',
-					sucess:function(ajaxdata){
+					success:function(ajaxdata){
+						
 						if(ajaxdata.state==0){
 							layer.msg("删除成功");
+							 $(".layui-laypage-btn")[0].click(); 
 						}
 					},
 					error:function(){
@@ -125,7 +129,6 @@ $(function(){
 	//监听工具条
 	table.on('tool(demo)', function(obj) {
 		var data = obj.data;
-		
 		if (obj.event === 'edit') {
 		     var setting = {
 			         view: {
@@ -133,9 +136,12 @@ $(function(){
 			             showLine: false
 			         },
 			         data: {
-			             simpleData: {
-			                 enable: true
-			             }
+			     		simpleData: {
+			    			enable: true,
+			    			idKey: "usernum",
+			    			pIdKey: "parent_id",
+			    			rootPId: null
+			    		}
 			         },
 			    
 			         check: {
@@ -169,46 +175,45 @@ $(function(){
 							var treeObj = $.fn.zTree.getZTreeObj("user_org");
 							var nodes = treeObj.getCheckedNodes(true);
 							//过滤掉非用户数据
-							var checkNodes=[];
+							var checkNodes=[""];
 							for(var i=0;i<nodes.length;i++){
 								var temp={};
-								if(nodes[i].is_parent==1){
+								if(nodes[i].is_parent==0){
 									continue;
 								}
-								temp.userid=nodes[i].orgid;
-								temp.rolid=data.rolid;
-								checkNodes[i]=temp;
+								checkNodes.push(nodes[i].usernum);
 							};
 							//动态的添加用户
 							$.ajax({
 							     type: "post",
 							     url: '/role/addOrUpdateUserRole',
-							     data: JSON.stringify(checkNodes),
+							     data: {"list":checkNodes,"rolid":data.rolid},
 							     async: true, 
 							     cache: true,
-							     dataType: "json",//必须指定，否则根据后端判断
-							     contentType:"application/json",
+							     dataType: "json",//必须指定，否则根据后端判
 							     success:function(){
 							    	 
 							     }
 							});
 							  layer.closeAll();
-							   $('.org').hide();
+							   $('.orgnation').hide();
 						  },
-						  bn2: function(){
+						  end:function(){
 							  layer.closeAll();
-						      $('.org').hide();
+						      $('#orgnation').hide();
 						  },
-						content:$('.org'),
+						content:$('.orgnation'),
 						area:['400px','400px'],
 						cancel:function(){
 							  layer.closeAll();
-						      $('.org').hide();
+						      $('#orgnation').hide();
 						},
 						success:function(layero){
 						     var mask = $(".layui-layer-shade");
 						     mask.appendTo(layero.parent());
 						     //其中：layero是弹层的DOM对象
+						     element.init();
+						     form.render(); 
 						}
 					});
 		}

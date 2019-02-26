@@ -203,7 +203,9 @@ public class RoleService implements RoleServiceInter{
 	@Override
 	public List<Map<String ,Object>> queryUsersByRold(String ROLID) {
 		List<UserOrganization> orgs=userRoleMapper.queryAllorgnInfo();
+		logger.debug("---S-----queryUsersByRold----------:" + orgs );
 		List<UserOrganization> orgsByid=userRoleMapper.queryUsersByRold(ROLID);
+		System.out.println(orgsByid.toString());
 		List<Map<String ,Object>> lists=new ArrayList<Map<String ,Object>>();
 		for( UserOrganization org:orgs) {
 			Map<String,Object> map=new HashMap<>();
@@ -212,19 +214,19 @@ public class RoleService implements RoleServiceInter{
 			map.put("is_parent",org.getIs_parent());
 			map.put("usernum",org.getUsernum());
 			map.put("parent_id",org.getParent_id());
-			if(org.getUsernum().equals(0)) {
+			if(org.getUsernum().equals("0")) {
 				map.put("open", true);
 			}
-			for(int i=0;i<orgsByid.size();i++) {
-				if(org.getName().equals(orgsByid.get(i).getName())) {
-					map.put("checked", true);
-				};	
-				break;
+			if( !orgsByid.isEmpty() ) {
+				for(int i=0;i<orgsByid.size();i++) {
+					if(org.getName().equals(orgsByid.get(i).getName())) {
+						map.put("checked", true);
+					};						
+				}
 			}
+			
 			lists.add(map);
-		}
-
-		
+		}		
 		return lists;
 	}
 

@@ -9,11 +9,9 @@
 	type="text/css">
 </head>
 <body>
-<div  class="loadContent">
-<div  style="width:96%;align:center;margin:0 auto">
+<div class="loadContent" >
 	<table class="layui-table" lay-filter="demo" id="role">
 	</table>
-</div>
 	<div class="layui-row" id="popUpdateTest" style="display: none;">
 		<div class="layui-col-md10">
 			<form class="layui-form role-form" lay-filter="roleForm" action=""
@@ -36,7 +34,7 @@
 					<div class="layui-input-block">
 						<select name="state" lay-verify="required">
 							<option value=""></option>
-							<option value="0">启用</option>
+							<option value="0" selected="">启用</option>
 							<option value="1">停用</option>
 						</select>
 					</div>
@@ -66,14 +64,14 @@
 				</div>
 				<div class="layui-form-item" style="margin-top: 40px">
 					<div class="layui-input-block">
-						<button class="layui-btn  layui-btn-submit ">确认</button>
+						<button class="layui-btn" lay-submit lay-filter="formSubmit">确认</button>
 						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
-	<div class="layui-row org" style="display: none">
+	<div class="layui-row orgnation" id ="orgnation" style="display: none">
 		<ul id="user_org" class="ztree"></ul>
 	</div>
 	<script type="text/html" id="barDemo">
@@ -87,6 +85,15 @@
     	<button class="layui-btn layui-btn-sm delete" lay-event="delete">删除</button>
      </div>
 	</script>
+	<link rel="stylesheet"
+	href="/jsPackage/web/design/ztree/css/metroStyle/metroStyle.css"
+	type="text/css">
+	<!-- <script src="/jsPackage/web/design/layui.all.js"></script>
+	<script src="/jsPackage/web/design/ztree/jquery-1.4.4.min.js"></script> -->
+	<script type="text/javascript"
+		src="/jsPackage/web/design/ztree/jquery.ztree.all.js"></script>
+	<script type="text/javascript"
+		src="/js/userCenter/user_role_relation.js"></script>
 	<script type="text/html" id="titleTpl">
   	{{#  if(d.state==0){ }}
     		<input type="checkbox"  lay-skin="switch" lay-text="启用|未启用" checked  disabled>
@@ -94,15 +101,6 @@
    			<input type="checkbox"  lay-skin="switch" lay-text="启用|未启用" disabled>
   {{#  } }}
 </script>
-
-<!-- <script src="/jsPackage/web/design/layui.all.js"></script> -->
-<script src="/jsPackage/web/design/ztree/jquery-1.4.4.min.js"></script>
-<script type="text/javascript"
-	src="/jsPackage/web/design/ztree/jquery.ztree.all.js"></script>
-<script type="text/javascript"
-	src="/js/userCenter/user_role_relation.js"></script>
 </div>
 </body>
-
- 
 </html>

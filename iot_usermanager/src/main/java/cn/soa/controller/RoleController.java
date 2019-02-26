@@ -13,6 +13,7 @@ package cn.soa.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,8 +73,8 @@ public class RoleController{
 	private static Logger logger = LoggerFactory.getLogger( RoleController.class );
 	
 	@RequestMapping("/roles")
-	public UserTableJson<List<UserRole>> queryAllroles(@RequestParam(value="page",required = false) Integer page ,@RequestParam(value="limit",required = false) Integer pageSize) {
-		return new UserTableJson<List<UserRole>>("",0,"",roleService.queryAllroles(page, pageSize),roleService.countRoles(),true);
+	public UserTableJson<List<UserRole>> queryAllroles(@RequestParam(value="page",required = false) Integer page ,@RequestParam(value="limit",required = false) Integer limit) {
+		return new UserTableJson<List<UserRole>>("",0,"",roleService.queryAllroles(page, limit),roleService.countRoles(),true);
 	}
 	@RequestMapping("/addOrUpdateRole")
 	public ResultJson addOrUpdateRoles(UserRole userRole) {
@@ -80,8 +82,9 @@ public class RoleController{
 		int modifyCount=-1;
 		if(rid==null||rid.equals("")) {
 			modifyCount=roleService.saveUserRole(userRole);
+		}else {
+			modifyCount=roleService.modifyUserRoleById(userRole);
 		}
-		modifyCount=roleService.modifyUserRoleById(userRole);
 		if(modifyCount>0) {
 			return new ResultJson(0,"角色操作成功");
 		}
@@ -106,28 +109,30 @@ public class RoleController{
 
 	@RequestMapping("/queryUsersByRold")
 	public ResultJson queryUsersByRold(String rolid) {
-		return new ResultJson(roleService.queryUsersByRold(rolid));
+		List<Map<String, Object>> list = roleService.queryUsersByRold(rolid);
+		logger.debug("---C-----queryUsersByRold----------:" + list );
+		return new ResultJson(list);
 		
 	}
-
 	/**
 	 * 管理用户和角色的关系
 	 * @param ids
 	 * @return
 	 */
 	@RequestMapping("/addOrUpdateUserRole")
-	public ResultJson<Integer> addOrUpdateUserRole( @RequestBody UserRoleRelation[] checkNodes ) {
+	@Transactional
+	public ResultJson<Integer> addOrUpdateUserRole( @RequestParam("list[]") List<String> list ,String rolid ) {
 		List<UserRoleRelation> lists =new ArrayList<UserRoleRelation>();
-		if(checkNodes.length>0) {
-			String rolid=checkNodes[0].getRolid();
-			roleService.deleteUserUserAndRolebyId(rolid);
-			for(int i=0;i<checkNodes.length;i++) {
-				lists.add(new UserRoleRelation(checkNodes[i].getUserid(),checkNodes[i].getRolid()));
+		int delte=roleService.deleteUserUserAndRolebyId(rolid);
+		if(list.size()>1) {
+			for(int i=1;i<list.size();i++) {
+				lists.add(new UserRoleRelation(list.get(i),rolid));
 			}
+			int i=roleService.saveUserUserRoleInBatch(lists);
 		}
 		//批量插入用户
-		int flag=roleService.saveUserUserRoleInBatch(lists);
-		if(flag>0) {
+		
+		if(delte>0) {
 			return  new ResultJson(1);
 		}
 		return  new ResultJson(0);
