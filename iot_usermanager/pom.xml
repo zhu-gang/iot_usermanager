@@ -11,6 +11,7 @@
 	<groupId>cn.soa</groupId>
 	<artifactId>iot_usermanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>iot_usermanager</name>
 	<description>iot user manager system</description>
 
